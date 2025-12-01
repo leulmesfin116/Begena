@@ -1,0 +1,23 @@
+@import "tailwindcss";
+.animate {
+  @apply rounded-md p-4 shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300;
+}
+body {
+  background-color: black;
+  @apply text-white;
+}
+.card {
+  @apply flex flex-row gap-4;
+}
+.center {
+  @apply flex flex-col items-center;
+}
+.input {
+  @apply bg-gray-600 text-black border-1 border-white w-100 rounded-lg p-2;
+}
+.image {
+  @apply w-32 h-32;
+}
+.nav {
+  @apply text-white font-bold italic text-2xl px-3;
+}
