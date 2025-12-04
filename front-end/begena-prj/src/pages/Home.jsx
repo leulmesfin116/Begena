@@ -3,19 +3,40 @@ import podcast from "../assets/podcast.jpeg";
 import newSong from "../assets/newSong.jpeg";
 import playlist from "../assets/playlist.jpeg";
 import Lofi from "../assets/Lofi.jpeg";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 export function Home() {
+  const navigate = useNavigate();
+  // handing click events
+  function handleClick() {
+    navigate("/newMusic");
+  }
+  function handlePod() {
+    navigate("/Podcast");
+  }
   return (
     <>
       <div className="center m-10">
-        <h1 className="font-bold text-6xl ">BEGENA</h1>
-        <p className="text-2xl">christian song streaming website</p>
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 3, y: 0 }}
+          transition={{ duration: 3 }}
+          className="font-bold text-6xl "
+        >
+          BEGENA
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 3, y: 0 }}
+          transition={{ duration: 3 }}
+          className="text-2xl"
+        >
+          christian song streaming website
+        </motion.p>
         {/* first catagory */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <h2 className="font-bold text-2xl cenetr-">Artists</h2>
-        </div>
-        <div className=" card animate ">
+        <div onClick={handleClick} className=" card animate ">
           <img className="image" src={newSong} alt="new song" />
           <div className="">
             <h2 className="font-bold">new songs</h2>
@@ -23,7 +44,7 @@ export function Home() {
           </div>
           {/* second catagory */}
         </div>
-        <div className=" card animate">
+        <div onClick={handlePod} className=" card animate">
           <img className="image" src={podcast} alt="podcast" />
           {/* the text */}
           <div>

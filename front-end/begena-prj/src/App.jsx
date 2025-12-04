@@ -3,6 +3,8 @@ import { Home } from "./pages/Home.jsx";
 import { Library } from "./pages/Library.jsx";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
+import { NewMusic } from "./pages/NewMusic.jsx";
+import { Podcast } from "./pages/Podcast.jsx";
 import { Link, Route, Routes } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 function App() {
@@ -44,6 +46,8 @@ function App() {
         <Route path="/Library" element={<Library />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/newMusic" element={<NewMusic />} />
+        <Route path="/Podcast" element={<Podcast />} />
       </Routes>
     </>
   );
