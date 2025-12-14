@@ -10,11 +10,13 @@ const __filename = fileURLToPath(import.meta.url);
 // Get the directory name from the file path
 const __dirname = dirname(__filename);
 // unfinished
-app.use(express.static(path.join(__dirname, "../front-end/")));
+app.use(
+  express.static(path.join(__dirname, "../../front-end/begena-prj/dist"))
+);
 
 app.get("/", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "front-end", "begena-prj", "src", "pages", "Home.jsx")
+    path.join(__dirname, "../../front-end/begena-prj/dist/index.html")
   );
 });
 
