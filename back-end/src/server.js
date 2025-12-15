@@ -1,4 +1,5 @@
 import express from "express";
+import pool from "./db.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
