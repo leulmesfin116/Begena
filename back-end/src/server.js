@@ -22,7 +22,6 @@ app.get("/", (req, res) => {
     path.join(__dirname, "../../front-end/begena-prj/dist/index.html")
   );
 });
-
 app.listen(PORT, () => {
   console.log(`The serevr has started at Port:${PORT}`);
 });
