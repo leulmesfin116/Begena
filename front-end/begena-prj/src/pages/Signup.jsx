@@ -10,6 +10,7 @@ export function Signup() {
         <input className="input" type="text" placeholder="Email" />
         <input className="input" type="password" placeholder="*******" />
         <button
+          type="submit"
           className="relative bg-gray-600 rounded-lg p-3 border-2 border-white
         overflow-hidden group cursor-pointer "
         >

@@ -9,7 +9,9 @@ const PORT = process.env.PORT || 5007;
 const __filename = fileURLToPath(import.meta.url);
 // Get the directory name from the file path
 const __dirname = dirname(__filename);
-// unfinished
+// middlwWare
+app.use(express.json());
+//to show the file path directory
 app.use(
   express.static(path.join(__dirname, "../../front-end/begena-prj/dist"))
 );

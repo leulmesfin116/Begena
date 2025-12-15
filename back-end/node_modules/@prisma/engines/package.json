@@ -1,0 +1,41 @@
+{
+  "name": "@prisma/engines",
+  "version": "7.1.0",
+  "description": "This package is intended for Prisma's internal use",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisma/prisma.git",
+    "directory": "packages/engines"
+  },
+  "license": "Apache-2.0",
+  "author": "Tim Suchanek <suchanek@prisma.io>",
+  "devDependencies": {
+    "@swc/core": "1.11.5",
+    "@swc/jest": "0.2.37",
+    "@types/jest": "29.5.14",
+    "@types/node": "~20.19.24",
+    "execa": "5.1.1",
+    "typescript": "5.4.5",
+    "vitest": "3.2.4"
+  },
+  "dependencies": {
+    "@prisma/engines-version": "7.1.0-6.ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
+    "@prisma/debug": "7.1.0",
+    "@prisma/fetch-engine": "7.1.0",
+    "@prisma/get-platform": "7.1.0"
+  },
+  "files": [
+    "dist",
+    "download",
+    "scripts"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "DEV=true tsx helpers/build.ts",
+    "build": "tsx helpers/build.ts",
+    "test": "vitest run",
+    "postinstall": "node scripts/postinstall.js"
+  }
+}
