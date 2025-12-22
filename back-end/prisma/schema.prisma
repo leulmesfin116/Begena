@@ -36,3 +36,9 @@ model Artist{
   imageUrl  String?
   createdAt DateTime @default(now())
 }
+model playlist{
+  id        Int     @id@default(increment())
+  name      string
+  userId    Int
+  createdAt DateTime @default(now())
+}
