@@ -29,3 +29,10 @@ model music{
   audioUrl    String
   createdAt   DateTime @default(now())
 }
+model Artist{
+  id        Int         @id@default(autoincrement())
+  name      String
+  bio       String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+}
