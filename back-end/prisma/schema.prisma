@@ -20,3 +20,12 @@ username    string? @unique
 createdAt    DateTime @default
 playlists   playlist[]
 }
+model music{
+  id          Int          @id@default(autoincrement())
+  title       String
+  artist      String
+  genre       String
+  duration    Int
+  audioUrl    String
+  createdAt   DateTime @default(now())
+}
