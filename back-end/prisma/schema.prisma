@@ -12,15 +12,15 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-model user{
+model User{
   id        Int         @id@default(autoincrement())
   email     String      @unique
 password    string
-username    string? @unique
+Username    string? @unique
 createdAt    DateTime @default
-playlists   playlist[]
+Playlists   Playlist[]
 }
-model music{
+model Music{
   id          Int          @id@default(autoincrement())
   title       String
   artist      String
@@ -36,9 +36,15 @@ model Artist{
   imageUrl  String?
   createdAt DateTime @default(now())
 }
-model playlist{
+model Playlist{
   id        Int     @id@default(increment())
   name      string
-  userId    Int
+  UserId    Int
   createdAt DateTime @default(now())
+}
+model PlaylistMusic{
+  id            Int @id@default(autoincrement())
+  PlaylistId    Int
+  MusicId       Int
+  addedAt       DateTime @default(now())
 }
