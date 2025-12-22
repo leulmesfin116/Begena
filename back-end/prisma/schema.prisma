@@ -47,4 +47,17 @@ model PlaylistMusic{
   PlaylistId    Int
   MusicId       Int
   addedAt       DateTime @default(now())
+  @@unique([PlaylistId, MusicId])
+}
+model Like{
+  id            Int @id@default(autoincrement())
+  userId        Int
+  MusicId       Int
+  @@unique([UserId, MusicId])
+}
+model PlayHistory{
+  id            Int @id@default(autoincrement())
+  UserId        Int
+  MusicId       Int
+  playedat     DateTime@default(now())
 }
