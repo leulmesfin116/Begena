@@ -15,10 +15,10 @@ datasource db {
 model User{
   id        Int         @id@default(autoincrement())
   email     String      @unique
-password    string
-Username    string? @unique
-createdAt    DateTime @default
-Playlists   Playlist[]
+  password  String
+  Username  String?     @unique
+  createdAt DateTime    @default(now())
+  Playlists Playlist[]
 }
 model Music{
   id          Int          @id@default(autoincrement())
