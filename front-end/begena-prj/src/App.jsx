@@ -36,26 +36,34 @@ function App() {
                 Signup
               </Link>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="search songs"
-                  className="pl-10 pr-4 py-2 border-2 rounded-md input w-48 sm:w-64"
+                  className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base"
                 />
-                <FaSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300" />
+                <FaSearch className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </div>
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
-                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                {isDarkMode ? (
+                  <Sun size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+                ) : (
+                  <Moon size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+                )}
               </button>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="md:hidden p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
               >
-                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                {isMenuOpen ? (
+                  <X size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+                ) : (
+                  <Menu size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+                )}
               </button>
             </div>
           </div>
