@@ -3,11 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 .animate {
-  @apply rounded-md p-4 shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300;
+  @apply rounded-md p-4 shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 bg-white dark:bg-gray-800 text-black dark:text-white;
 }
 body {
-  background-color: black;
-  @apply text-white;
+  @apply bg-white text-black dark:bg-black dark:text-white transition-colors duration-300;
 }
 .card {
   @apply flex flex-row gap-4;
@@ -16,13 +15,13 @@ body {
   @apply flex flex-col items-center;
 }
 .input {
-  @apply bg-gray-600 text-black border-1 border-white w-100 rounded-lg p-2;
+  @apply bg-gray-200 text-black dark:bg-gray-600 dark:text-white border border-gray-300 dark:border-white w-full rounded-lg p-2;
 }
 .image {
-  @apply w-32 h-32;
+  @apply w-24 h-24 sm:w-32 sm:h-32;
 }
 .nav {
-  @apply text-white font-bold italic text-2xl px-3;
+  @apply text-black dark:text-white font-bold italic text-lg sm:text-2xl px-3 py-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors;
 }
 
 @theme inline {

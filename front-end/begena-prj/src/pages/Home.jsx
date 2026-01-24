@@ -16,58 +16,61 @@ export function Home() {
   }
   return (
     <>
-      <div className="center m-10">
+      <div className="center m-4 sm:m-10">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 3, y: 0 }}
-          transition={{ duration: 3 }}
-          className="font-bold text-6xl "
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="font-bold text-4xl sm:text-6xl text-center"
         >
           BEGENA
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 3, y: 0 }}
-          transition={{ duration: 3 }}
-          className="text-2xl"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-lg sm:text-2xl text-center mt-2"
         >
           christian song streaming website
         </motion.p>
-        {/* first catagory */}
+        {/* first category */}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div onClick={handleClick} className=" card animate ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8">
+        <div onClick={handleClick} className="card animate cursor-pointer">
           <img className="image" src={newSong} alt="new song" />
           <div className="">
-            <h2 className="font-bold">new songs</h2>
-            <p>plays recently released songs of this week.</p>
+            <h2 className="font-bold text-lg sm:text-xl">new songs</h2>
+            <p className="text-sm sm:text-base">
+              plays recently released songs of this week.
+            </p>
           </div>
-          {/* second catagory */}
+          {/* second category */}
         </div>
-        <div onClick={handlePod} className=" card animate">
+        <div onClick={handlePod} className="card animate cursor-pointer">
           <img className="image" src={podcast} alt="podcast" />
           {/* the text */}
           <div>
-            <h2 className="font-bold">Podcast</h2>
-            <p>
-              stream,discover,connetct - your world of podcast, all in one
-              place.
+            <h2 className="font-bold text-lg sm:text-xl">Podcast</h2>
+            <p className="text-sm sm:text-base">
+              stream,discover,connect - your world of podcast, all in one place.
             </p>
           </div>
         </div>
-        <div className=" card animate">
+        <div className="card animate cursor-pointer">
           <img className="image" src={playlist} alt="playlist" />
           <div>
-            <h2 className="font-bold">Your playlist</h2>
-            <p>Hear your most and recently played songs.</p>
+            <h2 className="font-bold text-lg sm:text-xl">Your playlist</h2>
+            <p className="text-sm sm:text-base">
+              Hear your most and recently played songs.
+            </p>
           </div>
         </div>
         {/* the 4th div */}
-        <div className="card animate">
+        <div className="card animate cursor-pointer sm:col-span-2 lg:col-span-1">
           <img className="image" src={Lofi} alt="Lo-fi" />
           <div>
-            <h2 className="font-bold">lofi</h2>
-            <p>
+            <h2 className="font-bold text-lg sm:text-xl">lofi</h2>
+            <p className="text-sm sm:text-base">
               Unwind with soothing Christian lo-fi. Peaceful beats to inspire
               your soul. Focus, reflect, and find your calm in every note.
             </p>
