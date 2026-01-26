@@ -36,7 +36,13 @@ export function Home() {
         {/* first category */}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8">
-        <div onClick={handleClick} className="card animate cursor-pointer">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          onClick={handleClick}
+          className="card animate cursor-pointer"
+        >
           <img className="image" src={newSong} alt="new song" />
           <div className="">
             <h2 className="font-bold text-lg sm:text-xl">new songs</h2>
@@ -45,8 +51,14 @@ export function Home() {
             </p>
           </div>
           {/* second category */}
-        </div>
-        <div onClick={handlePod} className="card animate cursor-pointer">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          onClick={handlePod}
+          className="card animate cursor-pointer"
+        >
           <img className="image" src={podcast} alt="podcast" />
           {/* the text */}
           <div>
@@ -55,8 +67,13 @@ export function Home() {
               stream,discover,connect - your world of podcast, all in one place.
             </p>
           </div>
-        </div>
-        <div className="card animate cursor-pointer">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="card animate cursor-pointer"
+        >
           <img className="image" src={playlist} alt="playlist" />
           <div>
             <h2 className="font-bold text-lg sm:text-xl">Your playlist</h2>
@@ -64,9 +81,14 @@ export function Home() {
               Hear your most and recently played songs.
             </p>
           </div>
-        </div>
+        </motion.div>
         {/* the 4th div */}
-        <div className="card animate cursor-pointer sm:col-span-2 lg:col-span-1">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
+          className="card animate cursor-pointer sm:col-span-2 lg:col-span-1"
+        >
           <img className="image" src={Lofi} alt="Lo-fi" />
           <div>
             <h2 className="font-bold text-lg sm:text-xl">lofi</h2>
@@ -75,7 +97,7 @@ export function Home() {
               your soul. Focus, reflect, and find your calm in every note.
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </>
   );
