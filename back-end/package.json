@@ -1,7 +1,7 @@
 {
   "name": "back-end",
   "version": "1.0.0",
-  "description": "",
+  "description": "this is the back-end of the begena website that stream songs",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.js",

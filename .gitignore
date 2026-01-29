@@ -1,8 +1,0 @@
-node_modules
-<<<<<<< HEAD
-=======
-# Keep environment variables out of version control
-.env
-
-/src/generated/prisma
->>>>>>> 730f119 (updating the database)
