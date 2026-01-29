@@ -1,6 +1,10 @@
 import express from "express";
 
+import songRoute from "./routes/songRoutes.js";
+
 const app = express();
+
+app.use("/songs", songRoute);
 
 const PORT = 5000;
 
