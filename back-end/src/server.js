@@ -1,6 +1,9 @@
 import express from "express";
+import { config } from "dotenv";
 
 import songRoute from "./routes/songRoutes.js";
+
+config();
 
 const app = express();
 
