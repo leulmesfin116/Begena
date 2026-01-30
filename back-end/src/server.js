@@ -5,6 +5,7 @@ import { connectDB, disconnectDB } from "./config/db.js";
 import songRoute from "./routes/songRoutes.js";
 
 config();
+connectDB();
 
 const app = express();
 
