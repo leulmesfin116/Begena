@@ -20,3 +20,18 @@ model User {
 
   createdAt DateTime @default(now())
 }
+model Song{
+  id String @id @default(uuid())
+  title String
+  runtime Int
+  genres String[] @default([])
+  createdBy String
+  createdAt DateTime @default(now())
+}
+model FavoutiteSong{
+  id  String @id @default(uuid())
+  UserId String
+  SongId String
+  createdAt DateTime @default(now())
+
+}
