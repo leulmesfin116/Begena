@@ -35,3 +35,15 @@ model FavoutiteSong{
   createdAt DateTime @default(now())
 
 }
+model Recentlyplayed{
+  id String @id @default(uuid())
+ UserId String
+  SongId String
+  playedAt DateTime @default(now())
+  }
+  model playlist{
+    id String @id @default(uuid())
+    UserId String
+    SongId String
+    @@unique([playlistId,songId])
+  }
