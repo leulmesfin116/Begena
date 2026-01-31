@@ -12,6 +12,11 @@ import { useTheme } from "./ThemeContext.jsx";
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // handling searches
+  const [search, setSearch] = useState();
+  function handleSearch(){
+
+  }
   return (
     <>
       <nav className="bg-white dark:bg-gray-900 shadow-md">
@@ -38,8 +43,10 @@ function App() {
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
               <div className="relative">
+                {/* on change */}
                 <input
                   type="text"
+                  value={search} onchange={}
                   placeholder="search songs"
                   className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base"
                 />
