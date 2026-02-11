@@ -14,9 +14,7 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // handling searches
   const [search, setSearch] = useState();
-  function handleSearch(){
-
-  }
+  function handleSearch() {}
   return (
     <>
       <nav className="bg-white dark:bg-gray-900 shadow-md">
@@ -46,7 +44,7 @@ function App() {
                 {/* on change */}
                 <input
                   type="text"
-                  value={search} onchange={}
+                  value={search}
                   placeholder="search songs"
                   className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base"
                 />
