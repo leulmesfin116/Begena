@@ -19,6 +19,12 @@ model User {
   password String
 
   createdAt DateTime @default(now())
+// back relation
+ playlist  Playlist[]
+ favouriteSong FavouriteSong[]
+ recentlyplayed Recentlyplayed[]
+
+
 }
 model Song{
   id String @id @default(uuid())
@@ -27,6 +33,10 @@ model Song{
   genres String[] @default([])
   createdBy String
   createdAt DateTime @default(now())
+  //  back relation
+  favouritedby FavouriteSong[]
+  playedin Recentlyplayed[]
+  playlists Playlist[] // opposite relation for Playlist.song
 }
 model FavouriteSong{
   id  String @id @default(uuid())
@@ -34,7 +44,7 @@ model FavouriteSong{
   songId String
   createdAt DateTime @default(now())
 
-  favUser User @relation(fields:[userid], references:[id] ,onDelete:Cascade)
+  favUser User @relation(fields:[userId], references:[id] ,onDelete:Cascade)
   favsong Song @relation(fields:[songId], references:[id] ,onDelete:Cascade)
 }
 model Recentlyplayed{
@@ -44,10 +54,10 @@ model Recentlyplayed{
   playedAt DateTime @default(now())
 
   RecPlayed User @relation(fields:[userId], references:[id],onDelete:Cascade)
-  RecSong Song @relation (fields:[songId],references:[id],onDelete:Cascade)
+  RecSong Song  @relation(fields:[songId], references:[id],onDelete:Cascade)
 
   }
-  model playlist{
+  model Playlist{
     id String @id @default(uuid())
     userId String
     songId String
