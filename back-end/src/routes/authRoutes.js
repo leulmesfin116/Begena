@@ -2,5 +2,7 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/");
+import { register } from "../controller/authController.js";
+
+router.post("/register", register);
 export default router;
