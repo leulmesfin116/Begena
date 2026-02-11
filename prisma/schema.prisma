@@ -5,10 +5,47 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+ 
 }
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+
+  createdAt DateTime @default(now())
+}
+model Song{
+  id String @id @default(uuid())
+  title String
+  runtime Int
+  genres String[] @default([])
+  createdBy String
+  createdAt DateTime @default(now())
+}
+model FavouriteSong{
+  id  String @id @default(uuid())
+  userId String
+  songId String
+  createdAt DateTime @default(now())
+
+}
+model Recentlyplayed{
+  id String @id @default(uuid())
+ userId String
+  songid String
+  playedAt DateTime @default(now())
+  }
+  model playlist{
+    id String @id @default(uuid())
+    userId String
+    songid String
+    // relations
+    user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+    song Song @relation(fields:[songId], references:[id],onDelete:Cascade)
+  }
