@@ -31,21 +31,27 @@ model Song{
 model FavouriteSong{
   id  String @id @default(uuid())
   userId String
-  SongId String
+  songId String
   createdAt DateTime @default(now())
 
+  favUser User @relation(fields:[userid], references:[id] ,onDelete:Cascade)
+  favsong Song @relation(fields:[songId], references:[id] ,onDelete:Cascade)
 }
 model Recentlyplayed{
   id String @id @default(uuid())
  userId String
-  SongId String
+  songId String
   playedAt DateTime @default(now())
+
+  RecPlayed User @relation(fields:[userId], references:[id],onDelete:Cascade)
+  RecSong Song @relation (fields:[songId],references:[id],onDelete:Cascade)
+
   }
   model playlist{
     id String @id @default(uuid())
     userId String
-    SongId String
+    songId String
     // relations
     user User @relation(fields:[userId], references:[id], onDelete:Cascade)
-    song Song @relation(fields:[userId], references:[id],onDelete:Cascade)
+    song Song @relation(fields:[songId], references:[id],onDelete:Cascade)
   }
