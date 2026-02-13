@@ -3,12 +3,14 @@ import express from "express";
 import { connectDB, disconnectDB } from "./config/db.js";
 
 import songRoute from "./routes/songRoutes.js";
+import authRoute from "./routes/authRoutes.js";
 
 connectDB();
 
 const app = express();
 
 app.use("/songs", songRoute);
+app.use("/auth", authRoute);
 
 const PORT = 5000;
 
