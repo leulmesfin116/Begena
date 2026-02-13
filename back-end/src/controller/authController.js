@@ -6,7 +6,7 @@ const register = async (req, res) => {
     where: { email: email },
   });
   if (userExist) {
-    return res.json;
+    return res.status(400).json({ error: "user alrady exist with this password" });
   }
 };
 
