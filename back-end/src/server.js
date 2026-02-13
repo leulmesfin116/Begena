@@ -9,6 +9,10 @@ connectDB();
 
 const app = express();
 
+// middle ware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// api routes
 app.use("/songs", songRoute);
 app.use("/auth", authRoute);
 
