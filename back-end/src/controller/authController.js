@@ -23,6 +23,9 @@ const register = async (req, res) => {
       password: hashedPassword,
     },
   });
+  // generating token
+  const token = generateToken(user.id);
+
   res.status(201).json({
     satus: "success",
     data: {
@@ -30,6 +33,7 @@ const register = async (req, res) => {
       name: name,
       email: email,
     },
+    token,
   });
 };
 // Login functionality
@@ -43,15 +47,17 @@ const login = async (req, res) => {
   }
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (isPasswordValid) {
-    return res.status(400).json({ message: "invalid email and password" });
+    return res.status(401).json({ message: "invalid email and password" });
   }
   // Generate token
-  const token = res.status(201).json({
+  const token = generateToken(user.id);
+  res.status(201).json({
     satus: "success",
     data: {
       id: user.id,
       email: email,
     },
+    token,
   });
 };
 export { register, login };
