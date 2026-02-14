@@ -44,5 +44,13 @@ const login = async (req, res) => {
   if (isPasswordValid) {
     return res.status(400).json({ message: "invalid email and password" });
   }
+  res.status(201).json({
+    satus: "success",
+    data: {
+      id: user.id,
+      name: name,
+      email: email,
+    },
+  });
 };
 export { register, login };
