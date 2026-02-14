@@ -41,4 +41,4 @@ const login = async (req, res) => {
     return res.status(400).json({ message: "invalid email and password" });
   }
 };
-export { register };
+export { register, login };
