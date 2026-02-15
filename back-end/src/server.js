@@ -4,6 +4,7 @@ import { connectDB, disconnectDB } from "./config/db.js";
 
 import songRoute from "./routes/songRoutes.js";
 import authRoute from "./routes/authRoutes.js";
+import favRoute from "./routes/favSongRoute.js";
 
 connectDB();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // api routes
 app.use("/song", songRoute);
 app.use("/auth", authRoute);
+app.use("/fav", favRoute);
 
 const PORT = 5000;
 
