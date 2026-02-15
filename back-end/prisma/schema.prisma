@@ -10,6 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+   url      = env("DATABASE_URL")
  
 }
 model User {
@@ -26,17 +27,12 @@ model User {
 
 
 }
-model Artist{
-  id String @id @default(uuid())
-  name String
-  songs Song[]
-}
 model Song{
   id String @id @default(uuid())
   title String
-  artistId String
+  artist String
   posterUrl String
-  runtime Int
+  runtime Int?
   genres String[] @default([])
   createdBy String
   createdAt DateTime @default(now())
@@ -44,9 +40,7 @@ model Song{
   favouritedby FavouriteSong[]
   playedin Recentlyplayed[]
   playlists Playlist[] 
-  // relation 
-  artist Artist @relation(fields:[artistId], references:[id] ,onDelete:Cascade)
-}
+  }
 model FavouriteSong{
   id  String @id @default(uuid())
   userId String
