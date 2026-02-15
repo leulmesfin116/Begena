@@ -1,8 +1,8 @@
 import express from "express";
 
 const router = express.Router();
-import { addtoWatchList } from "../controller/favSongController.js";
+import { addtoFav } from "../controller/favSongController.js";
 
-router.post("/", addtoWatchList);
+router.post("/addtoFav", addtoFav);
 
 export default router;

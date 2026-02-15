@@ -1,5 +1,5 @@
 import { prisma } from "../config/db.js";
-const addtoWatchList = async (req, res) => {
+const addtoFav = async (req, res) => {
   const { userId, songId } = req.body;
   try {
     // check if the song exist on the table
@@ -29,4 +29,4 @@ const addtoWatchList = async (req, res) => {
       .json({ message: "Something went wrong", error: err.message });
   }
 };
-export { addtoWatchList };
+export { addtoFav };
