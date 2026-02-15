@@ -1,6 +1,6 @@
 import { prisma } from "../config/db.js";
 // adding song
-const song = async (req, res) => {
+const addSong = async (req, res) => {
   try {
     const { title, artist, posterUrl } = req.body;
     // validationg the input
@@ -17,4 +17,4 @@ const song = async (req, res) => {
     res.status(500).json({ message: "server error" });
   }
 };
-export { song };
+export { addSong };

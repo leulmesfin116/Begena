@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // api routes
-app.use("/songs", songRoute);
+app.use("/song", songRoute);
 app.use("/auth", authRoute);
 
 const PORT = 5000;

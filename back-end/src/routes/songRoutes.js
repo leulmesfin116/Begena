@@ -2,8 +2,8 @@ import express from "express";
 
 const router = express.Router();
 
-import { song } from "../controller/addSongs.js";
+import { addSong } from "../controller/addSongs.js";
 
-router.post("/song", song);
+router.post("/addSong", addSong);
 
 export default router;
