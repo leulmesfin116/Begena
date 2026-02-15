@@ -5,6 +5,8 @@ import { connectDB, disconnectDB } from "./config/db.js";
 import songRoute from "./routes/songRoutes.js";
 import authRoute from "./routes/authRoutes.js";
 import favRoute from "./routes/favSongRoute.js";
+import recentRoute from "./routes/recentRoute.js";
+import playlistRoute from "./routes/playlistRoute.js";
 
 connectDB();
 
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/song", songRoute);
 app.use("/auth", authRoute);
 app.use("/fav", favRoute);
+app.use("/recent", recentRoute);
+app.use("/recent", playlistRoute);
 
 const PORT = 5000;
 
