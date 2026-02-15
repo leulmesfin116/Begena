@@ -46,7 +46,7 @@ model FavouriteSong{
   userId String
   songId String
   createdAt DateTime @default(now())
-
+   @@unique([userId, songId])
   favUser User @relation(fields:[userId], references:[id] ,onDelete:Cascade)
   favsong Song @relation(fields:[songId], references:[id] ,onDelete:Cascade)
 }
