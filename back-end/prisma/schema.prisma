@@ -26,9 +26,16 @@ model User {
 
 
 }
+model Artist{
+  id String @id @default(uuid())
+  name String
+  songs Song[]
+}
 model Song{
   id String @id @default(uuid())
   title String
+  artistId String
+  posterUrl String
   runtime Int
   genres String[] @default([])
   createdBy String
@@ -36,7 +43,9 @@ model Song{
   //  back relation
   favouritedby FavouriteSong[]
   playedin Recentlyplayed[]
-  playlists Playlist[] // opposite relation for Playlist.song
+  playlists Playlist[] 
+  // relation 
+  artist Artist @relation(fields:[artistId], references:[id] ,onDelete:Cascade)
 }
 model FavouriteSong{
   id  String @id @default(uuid())
