@@ -61,6 +61,7 @@ model Recentlyplayed{
   RecPlayed User @relation(fields:[userId], references:[id],onDelete:Cascade)
   RecSong Song  @relation(fields:[songId], references:[id],onDelete:Cascade)
 
+   @@index([userId, playedAt])
   }
   model Playlist{
     id String @id @default(uuid())
