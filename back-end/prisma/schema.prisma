@@ -55,6 +55,8 @@ model Recentlyplayed{
  userId String
   songId String
   playedAt DateTime @default(now())
+  @@unique([userId, songId])
+
 
   RecPlayed User @relation(fields:[userId], references:[id],onDelete:Cascade)
   RecSong Song  @relation(fields:[songId], references:[id],onDelete:Cascade)
