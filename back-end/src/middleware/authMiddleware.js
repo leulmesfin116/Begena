@@ -1,4 +1,3 @@
 import { prisma } from "../config/db.js";
 import jwt from "jsonwebtoken";
-const recent = (req, res) => {};
-export { recent };
+export const authMiddleware = (req, res) => {};
