@@ -40,6 +40,7 @@ model Song{
   favouritedby FavouriteSong[]
   playedin Recentlyplayed[]
   playlists Playlist[] 
+  song PlaylistSong[]
   }
 model FavouriteSong{
   id  String @id @default(uuid())
@@ -70,4 +71,18 @@ model Recentlyplayed{
     // relations
     user User @relation(fields:[userId], references:[id], onDelete:Cascade)
     song Song @relation(fields:[songId], references:[id],onDelete:Cascade)
+  // back relation
+  playlist  PlaylistSong[]
+  }
+  model PlaylistSong{
+    id String @id @default(uuid())
+    playlistId String
+    songId String
+    order Int
+     createdAt DateTime @default(now())
+     @@unique([playlistId, songId])
+
+    //  relation
+     playlist Playlist @relation(fields:[playlistId], references:[id], onDelete:Cascade)
+     song Song @relation(fields:[songId], references:[id],onDelete:Cascade)
   }
