@@ -1,6 +1,6 @@
 import express from "express";
 
 const route = express.Router();
-import { Playlist } from "../controller/playlistController";
-route.post("/playlist", Playlist);
+import { playList } from "../controller/playlistController.js";
+route.post("/playlist", playList);
 export default route;
