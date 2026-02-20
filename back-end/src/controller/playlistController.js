@@ -9,5 +9,6 @@ const playList = async (req, res) => {
   if (!songExist) {
     return res.status(400).json({ message: "Song does not exist" });
   }
+  const user = (req, res) => {};
 };
 export { playList };
