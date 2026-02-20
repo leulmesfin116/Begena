@@ -21,5 +21,9 @@ export const authMiddleware = async (req, res, next) => {
     if (!user) {
       res.status(401).json({ error: "user is not found" });
     }
-  } catch (err) {}
+    req.user = user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: "not authorized,token failed" });
+  }
 };
