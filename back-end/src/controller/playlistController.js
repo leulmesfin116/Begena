@@ -2,13 +2,15 @@ import { prisma } from "../config/db.js";
 import jwt from "jsonwebtoken";
 
 const playList = async (req, res) => {
-  const { songId, userId } = req.body;
+  const userId = req.user.id;
+
+  const { songId } = req.body;
   const songExist = await prisma.song.findUnique({
     where: { songId: songId },
   });
   if (!songExist) {
     return res.status(400).json({ message: "Song does not exist" });
   }
-  const user = (req, res) => {};
+  const playlist = (req, res) => {};
 };
 export { playList };

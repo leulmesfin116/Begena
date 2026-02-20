@@ -3,12 +3,12 @@ import jwt from "jsonwebtoken";
 export const authMiddleware = async (req, res, next) => {
   let token;
   if (
-    req.header.authorization &&
-    req.header.authorization.startWith("Bearer")
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
   ) {
-    token = req.header.authorization.split(" ")[1];
-  } else if (req.cookie.jwt) {
-    token = req.cookie.jwt;
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   if (!token) {
     return res.status(401).json({ error: "user is unathorized" });
@@ -19,7 +19,7 @@ export const authMiddleware = async (req, res, next) => {
       where: { id: decode.id },
     });
     if (!user) {
-      res.status(401).json({ error: "user is not found" });
+      return res.status(401).json({ error: "user is not found" });
     }
     req.user = user;
     next();
