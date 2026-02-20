@@ -11,6 +11,9 @@ export const authMiddleware = async (req, res, next) => {
     token = req.cookie.jwt;
   }
   if (!token) {
-    return res.status(401).json({ message: "user is unathorized" });
+    return res.status(401).json({ error: "user is unathorized" });
   }
+  try {
+    const decode = jwt.verify(token, process.JWT_SECRET);
+  } catch (err) {}
 };
