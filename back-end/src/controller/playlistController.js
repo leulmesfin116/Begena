@@ -13,10 +13,8 @@ const playList = async (req, res) => {
   }
   const playlist = await prisma.playlist.create({
     data: {
-      id,
       name,
-      userid:req.user.id,
-      createdAt,
+      userId: req.user.id,
     },
   });
 };
