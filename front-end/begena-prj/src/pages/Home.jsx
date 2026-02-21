@@ -15,7 +15,10 @@ export function Home() {
     navigate("/Podcast");
   }
   function handleList() {
-    navigate("/playlist");
+    navigate("/Playlist");
+  }
+  function handleLofi() {
+    navigate("/LofiMusic");
   }
   return (
     <>
@@ -89,11 +92,12 @@ export function Home() {
             </p>
           </div>
         </motion.div>
-        {/* the 4th div */}
+        {/*------------- the 4th div------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.0 }}
+          onClick={handleLofi}
           className="card animate cursor-pointer sm:col-span-2 lg:col-span-1"
         >
           <img className="image" src={Lofi} alt="Lo-fi" />
