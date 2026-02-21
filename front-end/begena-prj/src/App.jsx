@@ -5,6 +5,7 @@ import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { NewMusic } from "./pages/NewMusic.jsx";
 import { Podcast } from "./pages/Podcast.jsx";
+import { Playlist } from "./pages/Playlist.jsx";
 import { Link, Route, Routes } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { Moon, Sun, Menu, X } from "lucide-react";
@@ -115,6 +116,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/newMusic" element={<NewMusic />} />
         <Route path="/Podcast" element={<Podcast />} />
+        <Route path="/Playlist" element={<Playlist />} />
       </Routes>
     </>
   );

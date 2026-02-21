@@ -14,6 +14,9 @@ export function Home() {
   function handlePod() {
     navigate("/Podcast");
   }
+  function handleList() {
+    navigate("/playlist");
+  }
   return (
     <>
       <div className="center m-4 sm:m-10">
@@ -33,7 +36,7 @@ export function Home() {
         >
           christian song streaming website
         </motion.p>
-        {/* first category */}
+        {/*--------------------------- first category-------------------------*/}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -50,7 +53,7 @@ export function Home() {
               plays recently released songs of this week.
             </p>
           </div>
-          {/* second category */}
+          {/* ------------------second category--------------------- */}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -68,17 +71,21 @@ export function Home() {
             </p>
           </div>
         </motion.div>
+        {/*------------the third category-------------------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
+          onClick={handleList}
           className="card animate cursor-pointer"
         >
           <img className="image" src={playlist} alt="playlist" />
           <div>
-            <h2 className="font-bold text-lg sm:text-xl">Your playlist</h2>
+            <h2 className="font-bold text-lg sm:text-xl">
+              Create your playlist
+            </h2>
             <p className="text-sm sm:text-base">
-              Hear your most and recently played songs.
+              Hear your favourite song from the playlist you created.
             </p>
           </div>
         </motion.div>
