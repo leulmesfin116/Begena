@@ -2,7 +2,8 @@
 import podcast from "../assets/podcast.jpeg";
 import newSong from "../assets/newSong.jpeg";
 import playlist from "../assets/playlist.jpeg";
-import Lofi from "../assets/Lofi.jpeg";
+import Lofi from "../assets/Lofu.jpeg";
+import recent from "../assets/recent.jpeg";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 export function Home() {
@@ -19,6 +20,9 @@ export function Home() {
   }
   function handleLofi() {
     navigate("/LofiMusic");
+  }
+  function handleRecent() {
+    navigate("/Recent");
   }
   return (
     <>
@@ -106,6 +110,24 @@ export function Home() {
             <p className="text-sm sm:text-base">
               Unwind with soothing Christian lo-fi. Peaceful beats to inspire
               your soul. Focus, reflect, and find your calm in every note.
+            </p>
+          </div>
+        </motion.div>
+        {/* ---------the 5th div */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
+          onClick={handleRecent}
+          className="card animate cursor-pointer sm:col-span-2 lg:col-span-1"
+        >
+          <img className="image" src={recent} alt="Lo-fi" />
+          <div>
+            <h2 className="font-bold text-lg sm:text-xl">
+              Recently played Music
+            </h2>
+            <p className="text-sm sm:text-base">
+              your recently played music are here.
             </p>
           </div>
         </motion.div>
