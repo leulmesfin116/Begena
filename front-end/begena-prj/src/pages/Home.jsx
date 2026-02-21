@@ -6,6 +6,7 @@ import Lofi from "../assets/Lofu.jpeg";
 import recent from "../assets/recent.jpeg";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import Favourite from "../assets/favourite.jpeg";
 export function Home() {
   const navigate = useNavigate();
   // handing click events
@@ -23,6 +24,9 @@ export function Home() {
   }
   function handleRecent() {
     navigate("/Recent");
+  }
+  function handleFav() {
+    navigate("Favourite");
   }
   return (
     <>
@@ -113,21 +117,37 @@ export function Home() {
             </p>
           </div>
         </motion.div>
-        {/* ---------the 5th div */}
+        {/* ---------the 5th div----------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
           onClick={handleRecent}
           className="card animate cursor-pointer sm:col-span-2 lg:col-span-1"
         >
-          <img className="image" src={recent} alt="Lo-fi" />
+          <img className="image" src={recent} alt="recent" />
           <div>
             <h2 className="font-bold text-lg sm:text-xl">
               Recently played Music
             </h2>
             <p className="text-sm sm:text-base">
               your recently played music are here.
+            </p>
+          </div>
+        </motion.div>
+        {/* -------the 6th div----------- */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
+          onClick={handleFav}
+          className="card animate cursor-pointer sm:col-span-2 lg:col-span-1"
+        >
+          <img className="image" src={Favourite} alt="favourite" />
+          <div>
+            <h2 className="font-bold text-lg sm:text-xl">Favourite Music</h2>
+            <p className="text-sm sm:text-base">
+              your favourite songs are here
             </p>
           </div>
         </motion.div>

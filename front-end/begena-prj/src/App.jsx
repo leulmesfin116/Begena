@@ -7,6 +7,7 @@ import { NewMusic } from "./pages/NewMusic.jsx";
 import { Podcast } from "./pages/Podcast.jsx";
 import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
+import { Favourite } from "./pages/Favourite.jsx";
 import { Recent } from "./pages/Recent.jsx";
 import { Link, Route, Routes } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
@@ -121,6 +122,7 @@ function App() {
         <Route path="/Playlist" element={<Playlist />} />
         <Route path="/LofiMusic" element={<LofiMusic />} />
         <Route path="/Recent" element={<Recent />} />
+        <Route path="/Favourite" element={<Favourite />} />
       </Routes>
     </>
   );
