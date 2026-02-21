@@ -11,6 +11,13 @@ const playList = async (req, res) => {
   if (!songExist) {
     return res.status(400).json({ message: "Song does not exist" });
   }
-  const playlist = (req, res) => {};
+  const playlist = await prisma.playlist.create({
+    data: {
+      id,
+      name,
+      userid:req.user.id,
+      createdAt,
+    },
+  });
 };
 export { playList };
