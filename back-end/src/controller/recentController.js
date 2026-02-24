@@ -17,6 +17,20 @@ const recent = async (req, res) => {
         songId,
       },
     });
-  } catch (error) {}
+    const recentsongs = await prisma.recentlyplayed.findMany({
+      where: { userId: req.user.id },
+      orderBy: { playedAt: "desc" },
+      take: 11,
+      include: {
+        Recsong: true,
+      },
+    });
+    res.status(200).json({ message: "song are added" });
+  } catch (error) {
+    res.status(500).json({
+      message: "something went wrong",
+      error: error.message,
+    });
+  }
 };
 export { recent };
