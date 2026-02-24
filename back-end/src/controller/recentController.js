@@ -11,9 +11,15 @@ const recent = async (req, res) => {
       return res.status(401).json({ message: "the song doesnt exist" });
     }
     // adding in to the playlist
-    const newsong = await prisma.recentlyplayed.create({
-      data: {
-        userId: userId,
+    await prisma.recentlyplayed.upsert({
+      where: {
+        userId_songId: { userId, songId },
+      },
+      update: {
+        playedAt: new Date(),
+      },
+      create: {
+        userId,
         songId,
       },
     });
@@ -22,10 +28,10 @@ const recent = async (req, res) => {
       orderBy: { playedAt: "desc" },
       take: 11,
       include: {
-        Recsong: true,
+        RecSong: true,
       },
     });
-    res.status(200).json({ message: "song are added" });
+    res.status(200).json({ recentsongs });
   } catch (error) {
     res.status(500).json({
       message: "something went wrong",
