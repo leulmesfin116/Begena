@@ -1,6 +1,7 @@
 import { prisma } from "../config/db.js";
 const addtoFav = async (req, res) => {
-  const { userId, songId } = req.body;
+  const { songId } = req.body;
+  const userId = req.user.id;
   try {
     // check if the song exist on the table
     const song = await prisma.song.findUnique({ where: { id: songId } });
