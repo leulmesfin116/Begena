@@ -1,4 +1,4 @@
-export const logUser = async (email, password) => {
+export async function loginUser(email, password) {
   try {
     const res = await fetch("http://localhost:5000/auth/login", {
       method: "POST",
@@ -7,10 +7,12 @@ export const logUser = async (email, password) => {
     });
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem("token", data.token); // store JWT
-      return { success: true, data };
+      return { token: data.token, ...data };
     } else {
-      return { success: false, message: data.message };
+      return { message: data.message };
     }
-  } catch (error) {}
-};
+  } catch (error) {
+    return { message: error?.message || "Login error" };
+  }
+}
+export const logUser = loginUser;

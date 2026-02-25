@@ -1,20 +1,55 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { loginUser } from "../api/auth.js"; // make sure this file exists
+
 export function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const data = await loginUser(email, password);
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      setMessage("Login successful!");
+    } else {
+      setMessage("Login failed: " + data.message);
+    }
+  };
+
   return (
     <>
-      <div className="center  m-4 sm:m-8">
+      <div className="center m-4 sm:m-8">
         <h1 className="text-black dark:text-white p-3 text-2xl sm:text-3xl font-bold text-center">
           Login
         </h1>
         <p className="text-center">create an account!</p>
       </div>
-      <div className="center gap-4 p-2 max-w-md mx-auto">
-        <input className="input w-full" type="text" placeholder="Email" />
-        <input className="input w-full" type="password" placeholder="*******" />
+
+      <form
+        className="center gap-4 p-2 max-w-md mx-auto"
+        onSubmit={handleLogin}
+      >
+        <input
+          className="input w-full"
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="input w-full"
+          type="password"
+          placeholder="*******"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <button
           type="submit"
           className="relative bg-gray-300 dark:bg-gray-600 rounded-lg p-3 border-2 border-black dark:border-white
-        overflow-hidden group cursor-pointer w-full"
+          overflow-hidden group cursor-pointer w-full"
         >
           <span
             className="absolute inset-0 bg-black dark:bg-white translate-y-[-100%]
@@ -24,6 +59,9 @@ export function Login() {
             submit
           </span>
         </button>
+
+        <p className="text-center">{message}</p>
+
         <div className="flex flex-col sm:flex-row gap-3 items-center">
           <p>Need an account?</p>
           <Link
@@ -33,7 +71,7 @@ export function Login() {
             Sign Up
           </Link>
         </div>
-      </div>
+      </form>
     </>
   );
 }
