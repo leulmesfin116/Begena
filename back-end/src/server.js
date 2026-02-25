@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { connectDB, disconnectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import songRoute from "./routes/songRoutes.js";
 import authRoute from "./routes/authRoutes.js";
@@ -12,6 +13,13 @@ import playlistRoute from "./routes/playlistRoute.js";
 connectDB();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  }),
+);
 
 // middle ware
 app.use(express.json());
