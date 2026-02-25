@@ -22,7 +22,7 @@ app.use("/song", songRoute);
 app.use("/auth", authRoute);
 app.use("/fav", favRoute);
 app.use("/recent", recentRoute);
-app.use("/recent", playlistRoute);
+app.use("/play", playlistRoute);
 
 const PORT = 5000;
 

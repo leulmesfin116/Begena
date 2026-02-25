@@ -1,7 +1,7 @@
 import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware.js";
 const route = express.Router();
 
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import { playList } from "../controller/playlistController.js";
 
 route.use(authMiddleware);
