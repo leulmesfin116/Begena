@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import { connectDB, disconnectDB } from "./config/db.js";
+import cookieParser from "cookie-parser";
 
 import songRoute from "./routes/songRoutes.js";
 import authRoute from "./routes/authRoutes.js";
@@ -14,6 +15,7 @@ const app = express();
 
 // middle ware
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 // api routes
 app.use("/song", songRoute);

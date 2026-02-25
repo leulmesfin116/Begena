@@ -14,7 +14,7 @@ export const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ error: "user is unathorized" });
   }
   try {
-    const decode = jwt.verify(token, process.JWT_SECRET);
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
     const user = await prisma.user.findUnique({
       where: { id: decode.id },
     });
@@ -22,6 +22,7 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ error: "user is not found" });
     }
     req.user = user;
+    console.log("user from the middleware:", req.user);
     next();
   } catch (err) {
     return res.status(401).json({ error: "not authorized,token failed" });
