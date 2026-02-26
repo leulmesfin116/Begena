@@ -1,5 +1,24 @@
 import { Link } from "react-router-dom";
+import { signupUser } from "../api/auth.js";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 export function Signup() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    const data = await signupUser(name, email, password);
+
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      navigate("/");
+    } else {
+      setMessage("Signup failed: " + data.message);
+    }
+  };
   return (
     <>
       <div className="center  m-4 sm:m-8">
@@ -10,27 +29,31 @@ export function Signup() {
       </div>
       <div className="center gap-4 p-2 max-w-md mx-auto">
         <input
-          value={name}
           className="input w-full"
           type="text"
           placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <input
-          value={email}
           className="input w-full"
           type="text"
           placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          value={password}
           className="input w-full"
           type="password"
           placeholder="*******"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button
           type="submit"
           className="relative bg-gray-300 dark:bg-gray-600 rounded-lg p-3 border-2 border-black dark:border-white
         overflow-hidden group cursor-pointer w-full"
+          onSubmit={handleSingup}
         >
           <span
             className="absolute inset-0 bg-black dark:bg-white translate-y-[-100%]
