@@ -9,8 +9,24 @@ export function Signup() {
         <p className="text-center">create an account!</p>
       </div>
       <div className="center gap-4 p-2 max-w-md mx-auto">
-        <input className="input w-full" type="text" placeholder="Email" />
-        <input className="input w-full" type="password" placeholder="*******" />
+        <input
+          value={name}
+          className="input w-full"
+          type="text"
+          placeholder="Enter your name"
+        />
+        <input
+          value={email}
+          className="input w-full"
+          type="text"
+          placeholder="Email"
+        />
+        <input
+          value={password}
+          className="input w-full"
+          type="password"
+          placeholder="*******"
+        />
         <button
           type="submit"
           className="relative bg-gray-300 dark:bg-gray-600 rounded-lg p-3 border-2 border-black dark:border-white
