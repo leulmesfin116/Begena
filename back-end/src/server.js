@@ -22,6 +22,7 @@ app.use(
 );
 
 // middle ware
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
