@@ -15,4 +15,3 @@ export async function loginUser(email, password) {
     return { message: error?.message || "Login error" };
   }
 }
-export const logUser = loginUser;

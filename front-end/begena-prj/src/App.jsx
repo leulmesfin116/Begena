@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Home } from "./pages/Home.jsx";
 import { Library } from "./pages/Library.jsx";
 import { Login } from "./pages/Login.jsx";
@@ -9,16 +9,48 @@ import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
 import { Favourite } from "./pages/Favourite.jsx";
 import { Recent } from "./pages/Recent.jsx";
-import { Link, Route, Routes } from "react-router-dom";
-import { FaSearch } from "react-icons/fa";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { FaSearch, FaUserCircle } from "react-icons/fa";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "./ThemeContext.jsx";
+
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token")),
+  );
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const navigate = useNavigate();
+
+  // keep login state in sync with other tabs
+  useEffect(() => {
+    const handleStorage = () => {
+      setIsLoggedIn(Boolean(localStorage.getItem("token")));
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
   // handling searches
   const [search, setSearch] = useState();
   function handleSearch() {}
+
+  const handleUserIcon = () => {
+    if (!isLoggedIn) {
+      navigate("/Login");
+    } else {
+      setShowUserMenu((prev) => !prev);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setShowUserMenu(false);
+    navigate("/Login");
+  };
+
   return (
     <>
       <nav className="bg-white dark:bg-gray-900 shadow-md">
@@ -36,12 +68,16 @@ function App() {
               <Link className="nav" to="/Library">
                 Library
               </Link>
-              <Link className="nav" to="/Login">
-                Login
-              </Link>
-              <Link className="nav" to="/signup">
-                Signup
-              </Link>
+              {!isLoggedIn && (
+                <>
+                  <Link className="nav" to="/Login">
+                    Login
+                  </Link>
+                  <Link className="nav" to="/signup">
+                    Signup
+                  </Link>
+                </>
+              )}
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
               <div className="relative">
@@ -54,16 +90,36 @@ function App() {
                 />
                 <FaSearch className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </div>
-              <button
-                onClick={toggleTheme}
-                className="p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-              >
-                {isDarkMode ? (
-                  <Sun size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
-                ) : (
-                  <Moon size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+
+              {/* user icon with dropdown */}
+              <div className="relative">
+                <button
+                  onClick={handleUserIcon}
+                  className="p-1 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <FaUserCircle className="w-6 h-6" />
+                </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 shadow-lg rounded-md z-10">
+                    {isLoggedIn ? (
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Logout
+                      </button>
+                    ) : (
+                      <Link
+                        to="/Login"
+                        className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        Login
+                      </Link>
+                    )}
+                  </div>
                 )}
-              </button>
+              </div>
+
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
@@ -93,20 +149,24 @@ function App() {
                 >
                   Library
                 </Link>
-                <Link
-                  className="nav block px-3 py-2"
-                  to="/Login"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  className="nav block px-3 py-2"
-                  to="/signup"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Signup
-                </Link>
+                {!isLoggedIn && (
+                  <>
+                    <Link
+                      className="nav block px-3 py-2"
+                      to="/Login"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      className="nav block px-3 py-2"
+                      to="/signup"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Signup
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           )}
