@@ -9,6 +9,7 @@ import authRoute from "./routes/authRoutes.js";
 import favRoute from "./routes/favSongRoute.js";
 import recentRoute from "./routes/recentRoute.js";
 import playlistRoute from "./routes/playlistRoute.js";
+import uploadRoute from "./routes/uploadRoute.js";
 
 connectDB();
 
@@ -32,6 +33,7 @@ app.use("/auth", authRoute);
 app.use("/fav", favRoute);
 app.use("/recent", recentRoute);
 app.use("/play", playlistRoute);
+app.use("/upload", uploadRoute);
 
 const PORT = 5000;
 

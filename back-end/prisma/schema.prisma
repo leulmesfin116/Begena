@@ -32,6 +32,7 @@ model Song{
   title String
   artist String
   posterUrl String
+  audioUrl String
   runtime Int?
   genres String[] @default([])
   createdBy String

@@ -80,6 +80,21 @@ function App() {
               )}
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+              <button
+                onClick={toggleTheme}
+                aria-label={
+                  isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+                }
+                title={isDarkMode ? "Light mode" : "Dark mode"}
+                className="p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
+                {isDarkMode ? (
+                  <Sun size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+                ) : (
+                  <Moon size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
+                )}
+              </button>
+
               <div className="relative">
                 {/* on change */}
                 <input

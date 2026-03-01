@@ -2,9 +2,9 @@ import { prisma } from "../config/db.js";
 // adding song
 const addSong = async (req, res) => {
   try {
-    const { title, artist, posterUrl, createdBy, runtime, genres } = req.body;
+    const { title, artist, posterUrl, audioUrl, createdBy, runtime, genres } = req.body;
     // validationg the input
-    if (!title || !artist || !posterUrl || !createdBy) {
+    if (!title || !artist || !posterUrl || !audioUrl || !createdBy) {
       return res.status(400).json({ message: "All the fields are required" });
     }
     // adding new song
@@ -13,6 +13,7 @@ const addSong = async (req, res) => {
         title,
         artist,
         posterUrl,
+        audioUrl,
         createdBy,
         runtime,
         genres,
