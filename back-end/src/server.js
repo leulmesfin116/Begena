@@ -10,7 +10,6 @@ import favRoute from "./routes/favSongRoute.js";
 import recentRoute from "./routes/recentRoute.js";
 import playlistRoute from "./routes/playlistRoute.js";
 import uploadRoute from "./routes/uploadRoute.js";
-
 connectDB();
 
 const app = express();
@@ -24,6 +23,7 @@ app.use(
 
 // middle ware
 app.use("/uploads", express.static("uploads"));
+app.use("/upload", uploadRoute);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
