@@ -1,24 +1,30 @@
-import express from "express";
 import multer from "multer";
+import path from "path";
 
-const router = express.Router();
-
+// Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/"); // folder where files are saved
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    const ext = path.extname(file.originalname);
+    const name = path.basename(file.originalname, ext);
+    cb(null, `${Date.now()}-${name}${ext}`);
   },
 });
 
-const upload = multer({ storage });
+// File type validation
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("audio/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only audio files are allowed"), false);
+  }
+};
 
-router.post("/upload", upload.single("audio"), (req, res) => {
-  res.json({
-    message: "File uploaded",
-    file: req.file,
-  });
-});
+// File size limit (10MB)
+const limits = { fileSize: 10 * 1024 * 1024 };
 
-export default router;
+const upload = multer({ storage, fileFilter, limits });
+
+export default upload;

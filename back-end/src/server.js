@@ -3,7 +3,7 @@ import express from "express";
 import { connectDB, disconnectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import upload from "./upload/upload.js";
+import upload from "./routes/uploadRoute.js";
 
 import songRoute from "./routes/songRoutes.js";
 import authRoute from "./routes/authRoutes.js";
