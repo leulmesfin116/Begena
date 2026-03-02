@@ -23,7 +23,7 @@ export function Home() {
     navigate("/LofiMusic");
   }
   function handleRecent() {
-    navigate("/Recent");
+    navigate("/Library");
   }
   function handleFav() {
     navigate("Favourite");

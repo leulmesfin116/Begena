@@ -68,16 +68,12 @@ function App() {
               <Link className="nav" to="/Library">
                 Library
               </Link>
-              {!isLoggedIn && (
-                <>
-                  <Link className="nav" to="/Login">
-                    Login
-                  </Link>
-                  <Link className="nav" to="/signup">
-                    Signup
-                  </Link>
-                </>
-              )}
+              <Link className="nav" to="/Login">
+                Login
+              </Link>
+              <Link className="nav" to="/signup">
+                Signup
+              </Link>
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
               <button
@@ -164,24 +160,20 @@ function App() {
                 >
                   Library
                 </Link>
-                {!isLoggedIn && (
-                  <>
-                    <Link
-                      className="nav block px-3 py-2"
-                      to="/Login"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      className="nav block px-3 py-2"
-                      to="/signup"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Signup
-                    </Link>
-                  </>
-                )}
+                <Link
+                  className="nav block px-3 py-2"
+                  to="/Login"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  className="nav block px-3 py-2"
+                  to="/signup"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Signup
+                </Link>
               </div>
             </div>
           )}
