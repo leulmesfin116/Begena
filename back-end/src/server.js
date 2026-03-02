@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 // api routes
-app.use("/uppload", upload);
+app.use("/api", upload);
 app.use("/song", songRoute);
 app.use("/auth", authRoute);
 app.use("/fav", favRoute);
