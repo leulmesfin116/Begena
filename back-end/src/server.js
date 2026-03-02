@@ -3,6 +3,7 @@ import express from "express";
 import { connectDB, disconnectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import upload from "./upload/upload.js";
 
 import songRoute from "./routes/songRoutes.js";
 import authRoute from "./routes/authRoutes.js";
@@ -23,11 +24,11 @@ app.use(
 
 // middle ware
 app.use("/uploads", express.static("uploads"));
-app.use("/upload", uploadRoute);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 // api routes
+app.use("/uppload", upload);
 app.use("/song", songRoute);
 app.use("/auth", authRoute);
 app.use("/fav", favRoute);
