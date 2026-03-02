@@ -1,22 +1,35 @@
-import express from "express";
-import { upload } from "../upload/upload.js";
-import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../config/cloudinary.js";
+// uploadRoute.js
+const express = require("express");
+const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const router = express.Router();
 
-router.post("/", upload.single("audio"), async (req, res) => {
-  const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
-
-  res.json({ url: fileUrl });
+// Configure Cloudinary instance (replace with your credentials)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-router.post("/upload", upload.single("audio"), (req, res) => {
+
+// Multer + Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "songs",
+    resource_type: "video", // needed for audio
+  },
+});
+
+const upload = multer({ storage });
+
+// Single upload route
+router.post("/", upload.single("audio"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-
-  res.json({ url: req.file.path });
+  res.json({ url: req.file.path }); // Cloudinary URL
 });
 
-export default router;
+module.exports = router;
