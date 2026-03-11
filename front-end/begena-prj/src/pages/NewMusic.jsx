@@ -58,7 +58,7 @@ export function NewMusic() {
             </div>
 
             {/* Audio player */}
-            <audio controls className="w-48">
+            <audio controls className="w-90">
               <source src={song.audioUrl} type="audio/mpeg" />
               Your browser does not support audio.
             </audio>

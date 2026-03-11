@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 export function Upload() {
   const [title, setTitle] = useState("");
+  const [artist, setArtist] = useState(""); // <-- added artist state
   const [audio, setAudio] = useState(null);
   const [poster, setPoster] = useState(null);
 
@@ -10,6 +11,7 @@ export function Upload() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("artist", artist); // <-- include artist in FormData
     formData.append("audio", audio);
     if (poster) formData.append("poster", poster);
 
@@ -20,6 +22,12 @@ export function Upload() {
 
     const data = await res.json();
     console.log("Uploaded:", data);
+
+    // Optional: reset form
+    setTitle("");
+    setArtist("");
+    setAudio(null);
+    setPoster(null);
   };
 
   return (
@@ -34,8 +42,8 @@ export function Upload() {
       <input
         type="text"
         placeholder="Artist Name"
-        value={artist}
-        onChange={(e) => setArtist(e.target.value)}
+        value={artist} // <-- fixed
+        onChange={(e) => setArtist(e.target.value)} // <-- fixed
       />
       <input
         type="file"

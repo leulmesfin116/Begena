@@ -15,14 +15,18 @@ router.post(
     const audioFile = req.files.audio?.[0];
     const posterFile = req.files.poster?.[0];
     const title = req.body.title;
+    const artist = req.body.artist || "Unknown Artist";
 
     if (!audioFile || !title) {
-      return res.status(400).json({ error: "Audio file and title required" });
+      return res
+        .status(400)
+        .json({ error: "Audio file and title are required" });
     }
 
     res.json({
       message: "Song uploaded successfully",
       title,
+      artist,
       audioUrl: `http://localhost:5000/uploads/${audioFile.filename}`,
       posterUrl: posterFile
         ? `http://localhost:5000/uploads/${posterFile.filename}`
@@ -33,21 +37,22 @@ router.post(
 
 // Get all uploaded songs
 router.get("/uploads", (req, res) => {
-  const directoryPath = "uploads";
+  const fs = require("fs");
+  const path = require("path");
+  const uploadsDir = "uploads";
 
-  fs.readdir(directoryPath, (err, files) => {
-    if (err) {
-      return res.status(500).json({ error: "Unable to scan files" });
-    }
+  const files = fs.readdirSync(uploadsDir);
 
-    const songs = files.map((file, index) => ({
+  const songs = files
+    .filter((f) => f.endsWith(".mp3") || f.endsWith(".wav")) // only audio
+    .map((file, index) => ({
       id: index,
-      title: file,
-      url: `http://localhost:5000/uploads/${file}`,
+      title: file.replace(/\.[^/.]+$/, ""), // filename without extension
+      artist: "Unknown Artist", // optional: later store real artist in DB
+      audioUrl: `http://localhost:5000/uploads/${file}`,
+      posterUrl: "/default-poster.jpg", // optional
     }));
 
-    res.json(songs);
-  });
+  res.json(songs);
 });
-
 export default router;
