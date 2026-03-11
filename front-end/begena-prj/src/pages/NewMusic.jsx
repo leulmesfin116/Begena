@@ -56,7 +56,7 @@ export function NewMusic() {
               <h2 className="font-bold text-lg">{song.title}</h2>
               <p className="text-gray-500">{song.artist}</p>
             </div>
-
+            <button onClick={() => likeSong(song.id)}>❤️</button>
             {/* Audio player */}
             <audio controls className="w-90">
               <source src={song.audioUrl} type="audio/mpeg" />

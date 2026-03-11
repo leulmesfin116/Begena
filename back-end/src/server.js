@@ -24,17 +24,17 @@ app.use(
 
 // middle ware
 app.use("/uploads", express.static("uploads"));
+app.use("/upload", uploadRoute);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 // api routes
-app.use("/api", upload);
 app.use("/song", songRoute);
 app.use("/auth", authRoute);
 app.use("/fav", favRoute);
 app.use("/recent", recentRoute);
 app.use("/play", playlistRoute);
-app.use("/upload", uploadRoute);
+app.use("/api", uploadRoute);
 
 const PORT = 5000;
 

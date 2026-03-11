@@ -37,20 +37,18 @@ router.post(
 
 // Get all uploaded songs
 router.get("/uploads", (req, res) => {
-  const fs = require("fs");
-  const path = require("path");
   const uploadsDir = "uploads";
 
   const files = fs.readdirSync(uploadsDir);
 
   const songs = files
-    .filter((f) => f.endsWith(".mp3") || f.endsWith(".wav")) // only audio
+    .filter((f) => f.endsWith(".mp3") || f.endsWith(".wav"))
     .map((file, index) => ({
       id: index,
-      title: file.replace(/\.[^/.]+$/, ""), // filename without extension
-      artist: "Unknown Artist", // optional: later store real artist in DB
+      title: file.replace(/\.[^/.]+$/, ""),
+      artist: "Unknown Artist",
       audioUrl: `http://localhost:5000/uploads/${file}`,
-      posterUrl: "/default-poster.jpg", // optional
+      posterUrl: "/default-poster.jpg",
     }));
 
   res.json(songs);
