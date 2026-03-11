@@ -9,7 +9,7 @@ import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
 import { Favourite } from "./pages/Favourite.jsx";
 import { Recent } from "./pages/Recent.jsx";
-import {Upload} from "./pages/Upload.jsx";
+import { Upload } from "./pages/Upload.jsx";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FaSearch, FaUserCircle } from "react-icons/fa";
 import { Moon, Sun, Menu, X } from "lucide-react";
@@ -190,7 +190,7 @@ function App() {
         <Route path="/Playlist" element={<Playlist />} />
         <Route path="/LofiMusic" element={<LofiMusic />} />
         <Route path="/Recent" element={<Recent />} />
-        <Route path="/Upload" element={<Upload/>}
+        <Route path="/Upload" element={<Upload />} />
         <Route path="/Favourite" element={<Favourite />} />
       </Routes>
     </>

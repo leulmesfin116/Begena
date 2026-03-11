@@ -32,6 +32,12 @@ export function Upload() {
         required
       />
       <input
+        type="text"
+        placeholder="Artist Name"
+        value={artist}
+        onChange={(e) => setArtist(e.target.value)}
+      />
+      <input
         type="file"
         accept="audio/*"
         onChange={(e) => setAudio(e.target.files[0])}
