@@ -86,3 +86,11 @@ model Recentlyplayed{
      playlist Playlist @relation(fields:[playlistId], references:[id], onDelete:Cascade)
      song Song @relation(fields:[songId], references:[id],onDelete:Cascade)
   }
+  model Podcast {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  youtubeUrl  String
+  thumbnail   String?
+  createdAt   DateTime @default(now())
+}

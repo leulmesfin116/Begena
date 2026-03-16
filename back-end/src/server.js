@@ -10,6 +10,7 @@ import favRoute from "./routes/favSongRoute.js";
 import recentRoute from "./routes/recentRoute.js";
 import playlistRoute from "./routes/playlistRoute.js";
 import uploadRoute from "./routes/uploadRoute.js";
+import podcastRoute from "./routes/podcastRoute.js";
 connectDB();
 
 const app = express();
@@ -46,6 +47,7 @@ app.use("/fav", favRoute);
 app.use("/recent", recentRoute);
 app.use("/play", playlistRoute);
 app.use("/api", uploadRoute);
+app.use("/api/podcasts", podcastRoute);
 
 const PORT = 5000;
 
