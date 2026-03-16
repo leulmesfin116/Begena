@@ -16,11 +16,12 @@ const storage = multer.diskStorage({
 
 // 2️⃣ File type validation
 const fileFilter = (req, file, cb) => {
-  // Allow only audio files
-  if (file.mimetype.startsWith("audio/")) {
+  if (file.fieldname === "audio" && file.mimetype.startsWith("audio/")) {
+    cb(null, true);
+  } else if (file.fieldname === "poster" && file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(new Error("Only audio files are allowed"), false);
+    cb(new Error(`Invalid file type for field ${file.fieldname}`), false);
   }
 };
 

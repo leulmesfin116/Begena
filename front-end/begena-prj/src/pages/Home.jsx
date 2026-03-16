@@ -26,7 +26,7 @@ export function Home() {
     navigate("/Library");
   }
   function handleFav() {
-    navigate("Favourite");
+    navigate("/Favourite");
   }
   return (
     <>

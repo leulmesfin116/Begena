@@ -4,6 +4,7 @@ import { Library } from "./pages/Library.jsx";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { NewMusic } from "./pages/NewMusic.jsx";
+import { UploadMusic } from "./pages/UploadMusic.jsx";
 import { Podcast } from "./pages/Podcast.jsx";
 import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
@@ -14,6 +15,7 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FaSearch, FaUserCircle } from "react-icons/fa";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "./ThemeContext.jsx";
+import { GlobalPlayer } from "./components/GlobalPlayer.jsx";
 
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -74,6 +76,9 @@ function App() {
               </Link>
               <Link className="nav" to="/signup">
                 Signup
+              </Link>
+              <Link className="nav font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors" to="/upload">
+                Upload
               </Link>
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
@@ -169,11 +174,11 @@ function App() {
                   Login
                 </Link>
                 <Link
-                  className="nav block px-3 py-2"
-                  to="/signup"
+                  className="nav block px-3 py-2 font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors"
+                  to="/upload"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Signup
+                  Upload
                 </Link>
               </div>
             </div>
@@ -186,6 +191,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/newMusic" element={<NewMusic />} />
+        <Route path="/upload" element={<UploadMusic />} />
         <Route path="/Podcast" element={<Podcast />} />
         <Route path="/Playlist" element={<Playlist />} />
         <Route path="/LofiMusic" element={<LofiMusic />} />
@@ -193,6 +199,7 @@ function App() {
 
         <Route path="/Favourite" element={<Favourite />} />
       </Routes>
+      <GlobalPlayer />
     </>
   );
 }

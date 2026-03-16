@@ -8,12 +8,14 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const { refreshLikes } = useAudio();
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = await loginUser(email, password);
 
     if (data.token) {
       localStorage.setItem("token", data.token);
+      await refreshLikes(); // Load user's favorites immediately
       navigate("/");
     } else {
       setMessage("Login failed: " + data.message);

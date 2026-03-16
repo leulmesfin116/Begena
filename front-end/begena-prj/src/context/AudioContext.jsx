@@ -1,0 +1,209 @@
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
+
+const AudioContext = createContext();
+
+export function useAudio() {
+  return useContext(AudioContext);
+}
+
+export function AudioProvider({ children }) {
+  const [currentSong, setCurrentSong] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playlist, setPlaylist] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [likedSongs, setLikedSongs] = useState(new Set());
+  const audioRef = useRef(null);
+
+  const fetchLikes = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLikedSongs(new Set());
+        return;
+      }
+
+      const res = await fetch("http://localhost:5000/fav", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const likedIds = new Set(
+          data
+            .filter((song) => song !== null)
+            .map((song) => song.id)
+        );
+        setLikedSongs(likedIds);
+      }
+    } catch (err) {
+      console.error("Error fetching likes:", err);
+    }
+  }, []);
+
+  // Fetch likes on mount and when token might have changed (e.g., focus)
+  useEffect(() => {
+    fetchLikes();
+    window.addEventListener("focus", fetchLikes);
+    return () => window.removeEventListener("focus", fetchLikes);
+  }, [fetchLikes]);
+
+  useEffect(() => {
+    if (currentSong && audioRef.current) {
+      audioRef.current.load();
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((e) => {
+          console.error("Autoplay prevented:", e);
+          setIsPlaying(false);
+        });
+    }
+  }, [currentSong]);
+
+  const playSong = (song, songList = []) => {
+    if (currentSong?.id === song.id) {
+      togglePlay();
+    } else {
+      if (songList.length > 0) {
+        setPlaylist(songList);
+        const idx = songList.findIndex((s) => s.id === song.id);
+        setCurrentIndex(idx >= 0 ? idx : 0);
+      }
+      setCurrentSong(song);
+      setIsPlaying(true);
+    }
+  };
+
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(console.error);
+      }
+    }
+  };
+
+  const toggleLike = async (songId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Please login to like songs");
+
+      const res = await fetch("http://localhost:5000/fav/addtoFav", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ songId }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setLikedSongs((prev) => {
+          const newSet = new Set(prev);
+          if (data.removed) {
+            newSet.delete(songId);
+          } else {
+            newSet.add(songId);
+          }
+          return newSet;
+        });
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
+
+  const playNext = useCallback(() => {
+    if (playlist.length === 0) return;
+    const nextIndex = (currentIndex + 1) % playlist.length;
+    setCurrentIndex(nextIndex);
+    setCurrentSong(playlist[nextIndex]);
+    setIsPlaying(true);
+  }, [playlist, currentIndex]);
+
+  const playPrev = useCallback(() => {
+    if (playlist.length === 0) return;
+    if (audioRef.current && audioRef.current.currentTime > 3) {
+      audioRef.current.currentTime = 0;
+      return;
+    }
+    const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    setCurrentIndex(prevIndex);
+    setCurrentSong(playlist[prevIndex]);
+    setIsPlaying(true);
+  }, [playlist, currentIndex]);
+
+  const seekTo = useCallback((time) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
+    }
+  }, []);
+
+  const onTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const onLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const onEnded = () => {
+    setIsPlaying(false);
+    if (playlist.length > 0) {
+      playNext();
+    }
+  };
+
+  return (
+    <AudioContext.Provider
+      value={{
+        currentSong,
+        isPlaying,
+        playSong,
+        togglePlay,
+        playNext,
+        playPrev,
+        seekTo,
+        currentTime,
+        duration,
+        playlist,
+        likedSongs,
+        toggleLike,
+        refreshLikes: fetchLikes,
+      }}
+    >
+      {children}
+      <audio
+        ref={audioRef}
+        src={currentSong?.audioUrl}
+        onEnded={onEnded}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onTimeUpdate={onTimeUpdate}
+        onLoadedMetadata={onLoadedMetadata}
+      />
+    </AudioContext.Provider>
+  );
+}

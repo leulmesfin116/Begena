@@ -3,12 +3,11 @@ const addtoFav = async (req, res) => {
   const { songId } = req.body;
   const userId = req.user.id;
   try {
-    // check if the song exist on the table
     const song = await prisma.song.findUnique({ where: { id: songId } });
     if (!song) {
       return res.status(404).json({ message: "Song not found" });
     }
-    // adding a song
+
     const songExist = await prisma.favouriteSong.findUnique({
       where: {
         userId_songId: {
@@ -17,17 +16,48 @@ const addtoFav = async (req, res) => {
         },
       },
     });
+
     if (songExist) {
-      return res.status(400).json({ message: "The song already exits" });
+      // Remove if exists (Toggle)
+      await prisma.favouriteSong.delete({
+        where: {
+          userId_songId: {
+            userId,
+            songId,
+          },
+        },
+      });
+      return res.status(200).json({ message: "Song removed from favourites", removed: true });
     }
-    const addSong = await prisma.favouriteSong.create({
+
+    // Add if not exists
+    await prisma.favouriteSong.create({
       data: { userId, songId },
     });
-    res.status(201).json({ message: "song added to the favourite" });
+    res.status(201).json({ message: "Song added to the favourite", removed: false });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Something went wrong", error: err.message });
+    res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
-export { addtoFav };
+const getFavorites = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const favorites = await prisma.favouriteSong.findMany({
+      where: { userId },
+      include: {
+        favsong: true, // Fetch the related song data
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    
+    // Map to just the song objects for easier frontend use
+    const songs = favorites
+      .map((fav) => fav.favsong)
+      .filter((song) => song !== null);
+    res.status(200).json(songs);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch favorites", error: err.message });
+  }
+};
+
+export { addtoFav, getFavorites };
