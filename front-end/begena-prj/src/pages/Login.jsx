@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { loginUser } from "../api/auth.js"; // make sure this file exists
 import { useNavigate } from "react-router-dom";
+import { useAudio } from "../context/AudioContext";
 
 export function Login() {
   const [email, setEmail] = useState("");
