@@ -94,3 +94,10 @@ model Recentlyplayed{
   thumbnail   String?
   createdAt   DateTime @default(now())
 }
+model Lofi {
+  id        Int      @id @default(autoincrement())
+  title     String
+  audioUrl  String
+  coverUrl  String?
+  createdAt DateTime @default(now())
+}

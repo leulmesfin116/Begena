@@ -11,6 +11,8 @@ import recentRoute from "./routes/recentRoute.js";
 import playlistRoute from "./routes/playlistRoute.js";
 import uploadRoute from "./routes/uploadRoute.js";
 import podcastRoute from "./routes/podcastRoute.js";
+import lofiUpload from "./routes/lofiRouter.js";
+
 connectDB();
 
 const app = express();
@@ -48,6 +50,7 @@ app.use("/recent", recentRoute);
 app.use("/play", playlistRoute);
 app.use("/api", uploadRoute);
 app.use("/api/podcasts", podcastRoute);
+app.use("/api/lofi/upload", lofiUpload);
 
 const PORT = 5000;
 
