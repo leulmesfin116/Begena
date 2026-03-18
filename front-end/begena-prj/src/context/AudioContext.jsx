@@ -40,9 +40,7 @@ export function AudioProvider({ children }) {
       if (res.ok) {
         const data = await res.json();
         const likedIds = new Set(
-          data
-            .filter((song) => song !== null)
-            .map((song) => song.id)
+          data.filter((song) => song !== null).map((song) => song.id),
         );
         setLikedSongs(likedIds);
       }
@@ -102,7 +100,9 @@ export function AudioProvider({ children }) {
   const toggleLike = async (songId) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return alert("Please login to like songs");
+      if (!token) {
+        window.location.href = "/login";
+      }
 
       const res = await fetch("http://localhost:5000/fav/addtoFav", {
         method: "POST",

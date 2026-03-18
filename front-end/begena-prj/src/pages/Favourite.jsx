@@ -6,7 +6,8 @@ export function Favourite() {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { playSong, currentSong, isPlaying, likedSongs, toggleLike } = useAudio();
+  const { playSong, currentSong, isPlaying, likedSongs, toggleLike } =
+    useAudio();
 
   // Use likedSongs from context to trigger re-fetch or filter local list
   useEffect(() => {
@@ -21,12 +22,14 @@ export function Favourite() {
 
         const res = await fetch("http://localhost:5000/fav", {
           headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        }).catch(err => {
-          throw new Error("Network error: Could not connect to server. Please check if the backend is running.");
+            Authorization: `Bearer ${token}`,
+          },
+        }).catch((err) => {
+          throw new Error(
+            "Network error: Could not connect to server. Please check if the backend is running.",
+          );
         });
-        
+
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.message || `Server error: ${res.status}`);
@@ -37,7 +40,8 @@ export function Favourite() {
           .filter((song) => song !== null)
           .map((song) => ({
             ...song,
-            audioUrl: song.audioUrl || `http://localhost:5000/uploads/${song.url}`,
+            audioUrl:
+              song.audioUrl || `http://localhost:5000/uploads/${song.url}`,
             posterUrl: song.posterUrl || "/default-poster.jpg",
             artist: song.artist || "Unknown Artist",
           }));
@@ -64,7 +68,9 @@ export function Favourite() {
       {loading && <p className="text-center">Loading your favorites...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
       {!loading && !error && songs.length === 0 && (
-        <p className="text-center text-gray-500">You haven't liked any songs yet.</p>
+        <p className="text-center text-gray-500">
+          You haven't liked any songs yet.
+        </p>
       )}
 
       <div className="flex flex-col gap-4">
@@ -82,10 +88,14 @@ export function Favourite() {
 
             {/* Song info */}
             <div className="flex-1">
-              <h2 className="font-bold text-gray-900 dark:text-white">{song.title}</h2>
-              <p className="text-sm text-gray-500">{song.artist || "Unknown Artist"}</p>
+              <h2 className="font-bold text-gray-900 dark:text-white">
+                {song.title}
+              </h2>
+              <p className="text-sm text-gray-500">
+                {song.artist || "Unknown Artist"}
+              </p>
             </div>
-            
+
             <div className="flex items-center gap-3 pr-2">
               <button
                 onClick={() => toggleLike(song.id)}
@@ -98,7 +108,9 @@ export function Favourite() {
               <button
                 onClick={() => playSong(song, songs)}
                 className="w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-transform hover:scale-105 shadow-md flex-shrink-0"
-                title={currentSong?.id === song.id && isPlaying ? "Pause" : "Play"}
+                title={
+                  currentSong?.id === song.id && isPlaying ? "Pause" : "Play"
+                }
               >
                 {currentSong?.id === song.id && isPlaying ? (
                   <FaPause size={16} />
