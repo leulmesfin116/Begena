@@ -6,6 +6,8 @@ import {
   FaStepForward,
   FaStepBackward,
   FaHeart,
+  FaRandom,
+  FaRetweet,
 } from "react-icons/fa";
 
 function formatTime(seconds) {
@@ -28,6 +30,10 @@ export function GlobalPlayer() {
     playlist,
     likedSongs,
     toggleLike,
+    isShuffle,
+    toggleShuffle,
+    repeatMode,
+    toggleRepeatMode,
   } = useAudio();
 
   if (!currentSong) return null;
@@ -92,6 +98,18 @@ export function GlobalPlayer() {
         {/* Controls */}
         <div className="flex items-center justify-center gap-6 flex-1">
           <button
+            onClick={toggleShuffle}
+            title="Shuffle"
+            className={`transition-colors ${
+              isShuffle
+                ? "text-black dark:text-white"
+                : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            }`}
+          >
+            <FaRandom size={18} />
+          </button>
+
+          <button
             onClick={playPrev}
             disabled={!hasPlaylist}
             className={`transition-colors ${
@@ -124,6 +142,23 @@ export function GlobalPlayer() {
             }`}
           >
             <FaStepForward size={20} />
+          </button>
+
+          <button
+            onClick={toggleRepeatMode}
+            title={`Repeat: ${repeatMode}`}
+            className={`transition-colors relative ${
+              repeatMode !== "none"
+                ? "text-black dark:text-white"
+                : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            }`}
+          >
+            <FaRetweet size={18} />
+            {repeatMode === "one" && (
+              <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-black dark:bg-white text-white dark:text-black rounded-full w-3 h-3 flex items-center justify-center">
+                1
+              </span>
+            )}
           </button>
         </div>
 

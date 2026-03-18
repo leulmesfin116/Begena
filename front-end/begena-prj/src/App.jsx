@@ -12,7 +12,7 @@ import { Favourite } from "./pages/Favourite.jsx";
 import { Recent } from "./pages/Recent.jsx";
 
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import { FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "./ThemeContext.jsx";
 import { GlobalPlayer } from "./components/GlobalPlayer.jsx";
@@ -77,7 +77,10 @@ function App() {
               <Link className="nav" to="/signup">
                 Signup
               </Link>
-              <Link className="nav font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors" to="/upload">
+              <Link
+                className="nav font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors"
+                to="/upload"
+              >
                 Upload
               </Link>
             </div>
@@ -102,10 +105,9 @@ function App() {
                 <input
                   type="text"
                   value={search}
-                  placeholder="search songs"
+                  placeholder="    search songs"
                   className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base"
                 />
-                <FaSearch className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300 w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </div>
 
               {/* user icon with dropdown */}

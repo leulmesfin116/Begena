@@ -21,6 +21,8 @@ export function AudioProvider({ children }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [likedSongs, setLikedSongs] = useState(new Set());
+  const [isShuffle, setIsShuffle] = useState(false);
+  const [repeatMode, setRepeatMode] = useState("none"); // "none", "one", "all"
   const audioRef = useRef(null);
 
   const fetchLikes = useCallback(async () => {
@@ -130,13 +132,38 @@ export function AudioProvider({ children }) {
     }
   };
 
+  const toggleShuffle = () => setIsShuffle((prev) => !prev);
+  const toggleRepeatMode = () => {
+    setRepeatMode((prev) => {
+      if (prev === "none") return "all";
+      if (prev === "all") return "one";
+      return "none";
+    });
+  };
+
   const playNext = useCallback(() => {
     if (playlist.length === 0) return;
-    const nextIndex = (currentIndex + 1) % playlist.length;
+
+    let nextIndex;
+    if (isShuffle) {
+      nextIndex = Math.floor(Math.random() * playlist.length);
+      // Try to avoid playing the same song again if playlist has more than 1 song
+      if (nextIndex === currentIndex && playlist.length > 1) {
+        nextIndex = (nextIndex + 1) % playlist.length;
+      }
+    } else {
+      nextIndex = (currentIndex + 1) % playlist.length;
+      // If we are at the end and repeatMode is none, don't loop back
+      if (nextIndex === 0 && repeatMode === "none" && currentIndex !== -1) {
+        setIsPlaying(false);
+        return;
+      }
+    }
+
     setCurrentIndex(nextIndex);
     setCurrentSong(playlist[nextIndex]);
     setIsPlaying(true);
-  }, [playlist, currentIndex]);
+  }, [playlist, currentIndex, isShuffle, repeatMode]);
 
   const playPrev = useCallback(() => {
     if (playlist.length === 0) return;
@@ -170,9 +197,19 @@ export function AudioProvider({ children }) {
   };
 
   const onEnded = () => {
-    setIsPlaying(false);
-    if (playlist.length > 0) {
-      playNext();
+    if (repeatMode === "one") {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(console.error);
+      }
+    } else if (playlist.length > 0) {
+      if (repeatMode === "none" && currentIndex === playlist.length - 1) {
+        setIsPlaying(false);
+      } else {
+        playNext();
+      }
+    } else {
+      setIsPlaying(false);
     }
   };
 
@@ -191,6 +228,10 @@ export function AudioProvider({ children }) {
         playlist,
         likedSongs,
         toggleLike,
+        isShuffle,
+        toggleShuffle,
+        repeatMode,
+        toggleRepeatMode,
         refreshLikes: fetchLikes,
       }}
     >
