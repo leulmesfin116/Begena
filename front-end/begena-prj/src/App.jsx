@@ -8,6 +8,7 @@ import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
 import { Favourite } from "./pages/Favourite.jsx";
 import { Recent } from "./pages/Recent.jsx";
+import { Search } from "./pages/Search.jsx";
 
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
@@ -34,8 +35,12 @@ function App() {
   }, []);
 
   // handling searches
-  const [search, setSearch] = useState();
-  function handleSearch() {}
+  const [search, setSearch] = useState("");
+  function handleSearch(e) {
+    if (e.key === "Enter" && search.trim()) {
+      navigate(`/Search?q=${encodeURIComponent(search.trim())}`);
+    }
+  }
 
   const handleUserIcon = () => {
     if (!isLoggedIn) {
@@ -94,8 +99,10 @@ function App() {
                 <input
                   type="text"
                   value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={handleSearch}
                   placeholder="    search songs"
-                  className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base"
+                  className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base outline-none focus:border-indigo-500 transition-colors"
                 />
               </div>
 
@@ -180,6 +187,7 @@ function App() {
         <Route path="/Recent" element={<Recent />} />
 
         <Route path="/Favourite" element={<Favourite />} />
+        <Route path="/Search" element={<Search />} />
       </Routes>
       <GlobalPlayer />
     </>
