@@ -44,7 +44,7 @@ export function Podcast() {
         Podcasts
       </h1>
 
-      {loading && <p className="text-center py-10">Loading podcasts...</p>}
+      {loading && <div className="flex justify-center my-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white"></div></div>}
       {error && <p className="text-center py-10 text-red-500">{error}</p>}
 
       {!loading && !error && podcasts.length === 0 && (

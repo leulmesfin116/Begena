@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Home } from "./pages/Home.jsx";
-import { Library } from "./pages/Library.jsx";
 import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { NewMusic } from "./pages/NewMusic.jsx";
-import { UploadMusic } from "./pages/UploadMusic.jsx";
 import { Podcast } from "./pages/Podcast.jsx";
 import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
@@ -68,20 +66,11 @@ function App() {
               <Link className="nav" to="/">
                 Home
               </Link>
-              <Link className="nav" to="/Library">
-                Library
-              </Link>
               <Link className="nav" to="/Login">
                 Login
               </Link>
               <Link className="nav" to="/signup">
                 Signup
-              </Link>
-              <Link
-                className="nav font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors"
-                to="/upload"
-              >
-                Upload
               </Link>
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
@@ -163,13 +152,6 @@ function App() {
                 </Link>
                 <Link
                   className="nav block px-3 py-2"
-                  to="/Library"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Library
-                </Link>
-                <Link
-                  className="nav block px-3 py-2"
                   to="/Login"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -189,11 +171,9 @@ function App() {
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Library" element={<Library />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/newMusic" element={<NewMusic />} />
-        <Route path="/upload" element={<UploadMusic />} />
         <Route path="/Podcast" element={<Podcast />} />
         <Route path="/Playlist" element={<Playlist />} />
         <Route path="/LofiMusic" element={<LofiMusic />} />

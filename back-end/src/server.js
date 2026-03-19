@@ -39,6 +39,7 @@ app.use(
 
 // middle ware
 app.use("/uploads", express.static("uploads"));
+app.use("/lofi", express.static("public/lofi"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -50,7 +51,7 @@ app.use("/recent", recentRoute);
 app.use("/play", playlistRoute);
 app.use("/api", uploadRoute);
 app.use("/api/podcasts", podcastRoute);
-app.use("/api/lofi/upload", lofiUpload);
+app.use("/api/lofi", lofiUpload);
 
 const PORT = 5000;
 

@@ -38,13 +38,22 @@ export function Favourite() {
         const data = await res.json();
         const mapped = data
           .filter((song) => song !== null)
-          .map((song) => ({
-            ...song,
-            audioUrl:
-              song.audioUrl || `http://localhost:5000/uploads/${song.url}`,
-            posterUrl: song.posterUrl || "/default-poster.jpg",
-            artist: song.artist || "Unknown Artist",
-          }));
+          .map((song) => {
+            let pUrl = song.posterUrl || "/default-poster.jpg";
+            if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
+              pUrl = `http://localhost:5000/uploads/${pUrl}`;
+            }
+            let aUrl = song.audioUrl || song.url;
+            if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
+              aUrl = `http://localhost:5000/uploads/${aUrl}`;
+            }
+            return {
+              ...song,
+              audioUrl: aUrl,
+              posterUrl: pUrl,
+              artist: song.artist || "Unknown Artist",
+            };
+          });
         setSongs(mapped);
       } catch (err) {
         console.error("Favourite fetch error:", err);
@@ -65,7 +74,7 @@ export function Favourite() {
         </h1>
       </div>
 
-      {loading && <p className="text-center">Loading your favorites...</p>}
+      {loading && <div className="flex justify-center my-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white"></div></div>}
       {error && <p className="text-center text-red-500">{error}</p>}
       {!loading && !error && songs.length === 0 && (
         <p className="text-center text-gray-500">

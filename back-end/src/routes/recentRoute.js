@@ -1,8 +1,10 @@
 import express from "express";
+import { recent } from "../controller/recentController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-import { recent } from "../controller/recentController.js";
 
-router.get("/played", recent);
+router.get("/played", authMiddleware, recent);
+router.post("/played", authMiddleware, recent);
 
 export default router;

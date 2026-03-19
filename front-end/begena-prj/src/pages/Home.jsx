@@ -1,4 +1,3 @@
-// Short: If `FaSearch` isn't visible it's usually because it's not imported where used or its color matches the background (use text-white).
 import podcast from "../assets/podcast.jpeg";
 import newSong from "../assets/newSong.jpeg";
 import playlist from "../assets/playlist.jpeg";
@@ -22,11 +21,11 @@ export function Home() {
   function handleLofi() {
     navigate("/LofiMusic");
   }
-  function handleRecent() {
-    navigate("/Library");
-  }
   function handleFav() {
     navigate("/Favourite");
+  }
+  function handleRecent() {
+    navigate("/Recent");
   }
   return (
     <>
