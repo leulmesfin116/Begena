@@ -8,11 +8,15 @@ export const uploadLofi = async (req, res) => {
     }
     const audioUrl = `http://localhost:5000/lofi/${req.file.filename}`;
 
-    // Save track to DB
-    const track = await prisma.lofi.create({
+    // Save track to DB as a regular Song with "lofi" genre
+    const track = await prisma.song.create({
       data: { 
         title: title || "Untitled Lofi", 
-        audioUrl 
+        artist: "Lofi Community",
+        audioUrl,
+        posterUrl: "/default-poster.jpg", // Default poster for lofi
+        genres: ["lofi"],
+        createdBy: "admin"
       },
     });
 
@@ -25,7 +29,12 @@ export const uploadLofi = async (req, res) => {
 
 export const getLofiTracks = async (req, res) => {
   try {
-    const tracks = await prisma.lofi.findMany({
+    const tracks = await prisma.song.findMany({
+      where: {
+        genres: {
+          has: "lofi"
+        }
+      },
       orderBy: { createdAt: "desc" },
     });
     res.json(tracks);

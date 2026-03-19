@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAudio } from "../context/AudioContext";
-import { FaPlay, FaPause, FaUpload } from "react-icons/fa";
+import { FaPlay, FaPause, FaUpload, FaHeart } from "react-icons/fa";
 
 export function LofiMusic() {
   const [songs, setSongs] = useState([]);
@@ -9,7 +9,7 @@ export function LofiMusic() {
   const fileInput = useRef();
   const [uploadLoading, setUploadLoading] = useState(false);
 
-  const { playSong, currentSong, isPlaying } = useAudio();
+  const { playSong, currentSong, isPlaying, likedSongs, toggleLike } = useAudio();
 
   const fetchLofi = async () => {
     try {
@@ -104,7 +104,7 @@ export function LofiMusic() {
                 >
                     <div className="relative w-14 h-14 flex-shrink-0">
                         <img
-                            src={song.coverUrl || "/default-poster.jpg"}
+                            src={song.posterUrl || "/default-poster.jpg"}
                             alt={song.title}
                             className="w-full h-full object-cover rounded-xl shadow-inner"
                         />
@@ -126,16 +126,30 @@ export function LofiMusic() {
                         <p className="text-gray-500 text-sm truncate">Lofi Community Beat</p>
                     </div>
 
-                    <button
-                        onClick={() => playSong(song, songs)}
-                        className="w-11 h-11 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-all hover:scale-110 shadow-lg active:scale-95"
-                    >
-                        {currentSong?.id === song.id && isPlaying ? (
-                            <FaPause size={16} />
-                        ) : (
-                            <FaPlay size={16} className="ml-1" />
-                        )}
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => toggleLike(song.id)}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                                likedSongs.has(song.id)
+                                    ? "text-red-500 bg-red-50 dark:bg-red-900/20"
+                                    : "text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            }`}
+                            title="Like"
+                        >
+                            <FaHeart size={18} />
+                        </button>
+
+                        <button
+                            onClick={() => playSong(song, songs)}
+                            className="w-11 h-11 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-all hover:scale-110 shadow-lg active:scale-95"
+                        >
+                            {currentSong?.id === song.id && isPlaying ? (
+                                <FaPause size={16} />
+                            ) : (
+                                <FaPlay size={16} className="ml-1" />
+                            )}
+                        </button>
+                    </div>
                 </div>
             ))
         )}
