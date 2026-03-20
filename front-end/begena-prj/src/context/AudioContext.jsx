@@ -33,7 +33,7 @@ export function AudioProvider({ children }) {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/fav", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/fav`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -108,7 +108,7 @@ export function AudioProvider({ children }) {
         window.location.href = "/login";
       }
 
-      const res = await fetch("http://localhost:5000/fav/addtoFav", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/fav/addtoFav`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -32,7 +32,7 @@ export function Playlist() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/play", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/play`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -76,7 +76,7 @@ export function Playlist() {
     try {
       setCreating(true);
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/play", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/play`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export function Playlist() {
     try {
       setIsDeleting(true);
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/play/${playlistToDelete.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/play/${playlistToDelete.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -132,7 +132,7 @@ export function Playlist() {
     e.stopPropagation();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/play/remove-song", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/play/remove-song`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -168,11 +168,11 @@ export function Playlist() {
     return playlistSongs.map((ps) => {
       let pUrl = ps.song.posterUrl || "/default-poster.jpg";
       if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-        pUrl = `http://localhost:5000/uploads/${pUrl}`;
+        pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
       }
       let aUrl = ps.song.audioUrl || ps.song.url;
       if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
-        aUrl = `http://localhost:5000/uploads/${aUrl}`;
+        aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
       }
       return {
         ...ps.song,

@@ -1,0 +1,27 @@
+FROM node:20-alpine
+
+# Install openssl for Prisma
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+# Note: We need prisma CLI to generate the client
+RUN npm install
+
+# Copy prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Copy the rest of the application code
+COPY . .
+
+EXPOSE 5000
+
+# Correct entry point
+CMD ["node", "src/server.js"]

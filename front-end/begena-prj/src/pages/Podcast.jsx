@@ -16,7 +16,7 @@ export function Podcast() {
 
   const fetchPodcasts = () => {
     setLoading(true);
-    fetch("http://localhost:5000/api/podcasts")
+    fetch(`${import.meta.env.VITE_API_URL}/api/podcasts`)
       .then((res) => {
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         return res.json();
@@ -42,7 +42,7 @@ export function Podcast() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/podcasts/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/podcasts/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

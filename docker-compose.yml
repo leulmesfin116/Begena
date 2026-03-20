@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: DockerFile
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./back-end/.env
+    volumes:
+      - ./back-end/uploads:/app/uploads
+      - ./back-end/public/lofi:/app/public/lofi
+    restart: always
+
+  frontend:
+    build:
+      context: ./front-end/begena-prj
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    volumes:
+      - ./front-end/begena-prj:/app
+      - /app/node_modules
+    restart: always

@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+.env
+.git
+.gitignore
+prisma/migrations
+# Add other files/folders you don't want in the image
+uploads
+public/lofi

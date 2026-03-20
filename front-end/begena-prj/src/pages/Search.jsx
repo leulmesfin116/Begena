@@ -20,18 +20,18 @@ export function Search() {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(`http://localhost:5000/song/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/song/search?q=${encodeURIComponent(query)}`);
         if (!res.ok) throw new Error("Search failed");
         
         const data = await res.json();
         const mapped = data.map(song => {
           let pUrl = song.posterUrl || "/default-poster.jpg";
           if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-              pUrl = `http://localhost:5000/uploads/${pUrl}`;
+              pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
           }
           let aUrl = song.audioUrl || song.url;
           if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
-              aUrl = `http://localhost:5000/uploads/${aUrl}`;
+              aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
           }
           return {
             ...song,

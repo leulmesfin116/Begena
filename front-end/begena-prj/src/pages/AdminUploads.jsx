@@ -39,7 +39,7 @@ export function AdminUploads() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/podcasts", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/podcasts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export function AdminUploads() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/lofi/upload", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lofi/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -20,7 +20,7 @@ export function Favourite() {
           return;
         }
 
-        const res = await fetch("http://localhost:5000/fav", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/fav`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -41,11 +41,8 @@ export function Favourite() {
           .map((song) => {
             let pUrl = song.posterUrl || "/default-poster.jpg";
             if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-              pUrl = `http://localhost:5000/uploads/${pUrl}`;
-            }
-            let aUrl = song.audioUrl || song.url;
-            if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
-              aUrl = `http://localhost:5000/uploads/${aUrl}`;
+              pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
+aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
             }
             return {
               ...song,

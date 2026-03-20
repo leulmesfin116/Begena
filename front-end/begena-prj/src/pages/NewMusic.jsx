@@ -25,7 +25,7 @@ export function NewMusic() {
         const token = localStorage.getItem("token");
 
         // Fetch songs
-        const songsRes = await fetch("http://localhost:5000/api/uploads").catch(
+        const songsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads`).catch(
           (err) => {
             throw new Error("Network error: Could not connect to server.");
           },
@@ -45,11 +45,8 @@ export function NewMusic() {
           .map((song) => {
             let pUrl = song.posterUrl || "/default-poster.jpg";
             if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-              pUrl = `http://localhost:5000/uploads/${pUrl}`;
-            }
-            let aUrl = song.audioUrl || song.url;
-            if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
-              aUrl = `http://localhost:5000/uploads/${aUrl}`;
+              pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
+aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
             }
             return {
               ...song,
@@ -62,7 +59,7 @@ export function NewMusic() {
 
         // Fetch playlists if logged in
         if (token) {
-          const playRes = await fetch("http://localhost:5000/play", {
+          const playRes = await fetch(`${import.meta.env.VITE_API_URL}/play`, {
             headers: { Authorization: `Bearer ${token}` },
           }).catch(() => null);
 
@@ -98,7 +95,7 @@ export function NewMusic() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/play/add-song", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/play/add-song`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +126,7 @@ export function NewMusic() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/upload/${songId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/${songId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
