@@ -55,7 +55,7 @@ export function Podcast() {
         {podcasts.map((p) => (
           <div
             key={p.id}
-            className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-all hover:shadow-xl"
+            className="bg-white dark:bg-card rounded-2xl shadow-lg overflow-hidden transition-all hover:shadow-xl"
           >
             <div className="relative aspect-video">
               {playingVideoId === p.id ? (

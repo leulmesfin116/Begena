@@ -51,10 +51,10 @@ export function GlobalPlayer() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 shadow-2xl z-50 flex flex-col">
+    <div className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-card/95 backdrop-blur-md border-t border-gray-200 dark:border-border shadow-2xl z-50 flex flex-col">
       {/* Progress Bar */}
       <div
-        className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 cursor-pointer group"
+        className="w-full h-1.5 bg-gray-200 dark:bg-muted cursor-pointer group"
         onClick={handleSeek}
       >
         <div

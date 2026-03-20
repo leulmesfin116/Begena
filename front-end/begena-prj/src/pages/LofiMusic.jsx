@@ -92,7 +92,7 @@ export function LofiMusic() {
 
       <div className="grid gap-4">
         {songs.length === 0 ? (
-            <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+            <div className="text-center py-20 bg-gray-50 dark:bg-card/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-border">
                 <p className="text-gray-500">No lofi tracks uploaded yet.</p>
                 <p className="text-sm text-gray-400 mt-1">Be the first to share a beat!</p>
             </div>
@@ -100,7 +100,7 @@ export function LofiMusic() {
             songs.map((song) => (
                 <div
                     key={song.id}
-                    className="group flex items-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700 rounded-2xl p-3 gap-4 transition-all"
+                    className="group flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md border border-gray-100 dark:border-border rounded-2xl p-3 gap-4 transition-all"
                 >
                     <div className="relative w-14 h-14 flex-shrink-0">
                         <img

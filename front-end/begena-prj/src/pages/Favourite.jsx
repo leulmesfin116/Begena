@@ -86,7 +86,7 @@ export function Favourite() {
         {songs.map((song) => (
           <div
             key={song.id}
-            className="flex items-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md rounded-xl p-3 gap-4 transition-all"
+            className="flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md rounded-xl p-3 gap-4 transition-all"
           >
             {/* Poster */}
             <img

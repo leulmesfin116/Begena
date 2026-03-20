@@ -77,7 +77,7 @@ export function Search() {
       )}
 
       {!loading && !error && songs.length === 0 && query && (
-          <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 max-w-xl mx-auto">
+          <div className="text-center py-20 bg-gray-50 dark:bg-card/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-border max-w-xl mx-auto">
               <p className="text-gray-500 text-lg font-medium">No matches found for "{query}"</p>
               <p className="text-sm text-gray-400 mt-1">Try checking for typos or searching something else.</p>
           </div>
@@ -87,7 +87,7 @@ export function Search() {
         {songs.map((song) => (
           <div
             key={song.id}
-            className="group flex items-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 sm:p-3 gap-3 sm:gap-4 transition-all"
+            className="group flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md border border-gray-100 dark:border-border rounded-xl p-2.5 sm:p-3 gap-3 sm:gap-4 transition-all"
           >
             <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16">
               <img
@@ -104,7 +104,7 @@ export function Search() {
 
             <div className="flex-1 min-w-0 pr-2">
               <h2
-                className={`font-bold text-base sm:text-lg leading-tight truncate ${currentSong?.id === song.id ? "text-indigo-600 dark:text-indigo-400" : "text-gray-900 dark:text-gray-100"}`}
+                className={`font-bold text-base sm:text-lg leading-tight truncate ${currentSong?.id === song.id ? "text-black dark:text-white" : "text-gray-900 dark:text-gray-100"}`}
               >
                 {song.title}
               </h2>

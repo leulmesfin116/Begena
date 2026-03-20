@@ -69,25 +69,7 @@ export function AudioProvider({ children }) {
           setIsPlaying(false);
         });
         
-      // Add to recently played automatically
-      const addToRecent = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          if (!token) return;
-          await fetch("http://localhost:5000/recent/played", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ songId: currentSong.id })
-          }).catch(console.error);
-        } catch (err) {
-          console.error("Failed to add to recent:", err);
-        }
-      };
-      
-      addToRecent();
+
     }
   }, [currentSong]);
 

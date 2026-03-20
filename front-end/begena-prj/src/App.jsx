@@ -7,7 +7,6 @@ import { Podcast } from "./pages/Podcast.jsx";
 import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
 import { Favourite } from "./pages/Favourite.jsx";
-import { Recent } from "./pages/Recent.jsx";
 import { Search } from "./pages/Search.jsx";
 
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
@@ -59,7 +58,7 @@ function App() {
 
   return (
     <>
-      <nav className="bg-white dark:bg-gray-900 shadow-md">
+      <nav className="bg-white dark:bg-background border-b border-gray-200 dark:border-border shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -85,7 +84,7 @@ function App() {
                   isDarkMode ? "Switch to light mode" : "Switch to dark mode"
                 }
                 title={isDarkMode ? "Light mode" : "Dark mode"}
-                className="p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-secondary text-black dark:text-white hover:bg-gray-300 dark:hover:bg-accent transition-colors"
               >
                 {isDarkMode ? (
                   <Sun size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -102,7 +101,7 @@ function App() {
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={handleSearch}
                   placeholder="    search songs"
-                  className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base outline-none focus:border-indigo-500 transition-colors"
+                  className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base outline-none focus:border-black dark:focus:border-white transition-colors"
                 />
               </div>
 
@@ -115,18 +114,18 @@ function App() {
                   <FaUserCircle className="w-6 h-6" />
                 </button>
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 shadow-lg rounded-md z-10">
+                  <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-card shadow-lg rounded-md z-10 border dark:border-border">
                     {isLoggedIn ? (
                       <button
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-accent"
                       >
                         Logout
                       </button>
                     ) : (
                       <Link
                         to="/Login"
-                        className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-accent"
                       >
                         Login
                       </Link>
@@ -137,7 +136,7 @@ function App() {
 
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="md:hidden p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-secondary text-black dark:text-white hover:bg-gray-300 dark:hover:bg-accent transition-colors"
               >
                 {isMenuOpen ? (
                   <X size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -149,7 +148,7 @@ function App() {
           </div>
           {isMenuOpen && (
             <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-background border-t border-gray-200 dark:border-border">
                 <Link
                   className="nav block px-3 py-2"
                   to="/"
@@ -184,7 +183,6 @@ function App() {
         <Route path="/Podcast" element={<Podcast />} />
         <Route path="/Playlist" element={<Playlist />} />
         <Route path="/LofiMusic" element={<LofiMusic />} />
-        <Route path="/Recent" element={<Recent />} />
 
         <Route path="/Favourite" element={<Favourite />} />
         <Route path="/Search" element={<Search />} />

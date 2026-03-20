@@ -151,7 +151,7 @@ export function NewMusic() {
         {songs.map((song) => (
           <div
             key={song.id}
-            className="group flex items-center bg-white dark:bg-gray-800 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 sm:p-3 gap-3 sm:gap-4 transition-all"
+            className="group flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md border border-gray-100 dark:border-border rounded-xl p-2.5 sm:p-3 gap-3 sm:gap-4 transition-all"
           >
             {/* Poster */}
             <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16">
@@ -186,7 +186,7 @@ export function NewMusic() {
                 className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${
                   likedSongs.has(song.id)
                     ? "text-red-500 bg-red-50 dark:bg-red-900/20"
-                    : "text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    : "text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-accent"
                 }`}
                 title="Like"
               >
@@ -205,8 +205,8 @@ export function NewMusic() {
                     }}
                     className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${
                       openPlaylistMenuId === song.id
-                        ? "bg-gray-200 dark:bg-gray-600 text-black dark:text-white"
-                        : "text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                        ? "bg-gray-200 dark:bg-muted text-black dark:text-white"
+                        : "text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-accent"
                     }`}
                     title="Add to Playlist"
                   >
@@ -216,9 +216,9 @@ export function NewMusic() {
                   {openPlaylistMenuId === song.id && (
                     <div
                       onClick={(e) => e.stopPropagation()}
-                      className="absolute right-0 top-12 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden transform opacity-100 scale-100 transition-all origin-top-right"
+                      className="absolute right-0 top-12 w-48 bg-white dark:bg-card rounded-xl shadow-xl border border-gray-100 dark:border-border z-50 overflow-hidden transform opacity-100 scale-100 transition-all origin-top-right"
                     >
-                      <div className="p-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+                      <div className="p-3 border-b border-gray-100 dark:border-border bg-gray-50/50 dark:bg-card/50">
                         <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
                           Add to Playlist
                         </p>
@@ -240,7 +240,7 @@ export function NewMusic() {
                                 onClick={() =>
                                   handleAddToPlaylist(pl.id, song.id)
                                 }
-                                className="w-full text-left px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors truncate active:bg-gray-200 dark:active:bg-gray-600"
+                                className="w-full text-left px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-accent transition-colors truncate active:bg-gray-200 dark:active:bg-muted"
                               >
                                 {pl.name}
                               </button>

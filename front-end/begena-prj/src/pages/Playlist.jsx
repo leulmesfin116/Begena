@@ -198,13 +198,13 @@ export function Playlist() {
     <div className="max-w-4xl mx-auto p-4 sm:p-6 md:pb-32 pb-24 border-none">
       <div className="mb-8 mt-4 sm:mt-8">
         <h1 className="text-black dark:text-white text-3xl sm:text-4xl font-bold text-center flex items-center justify-center gap-3">
-          <FaMusic className="text-black dark:text-gray-300" /> Your Playlists
+          <FaMusic className="text-black dark:text-foreground" /> Your Playlists
         </h1>
       </div>
 
       <form 
         onSubmit={handleCreatePlaylist} 
-        className="flex gap-3 max-w-xl mx-auto mb-10 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 focus-within:ring-2 focus-within:ring-black dark:focus-within:ring-white transition-shadow outline-none"
+        className="flex gap-3 max-w-xl mx-auto mb-10 bg-white dark:bg-card p-2 rounded-xl shadow-sm border border-gray-100 dark:border-border focus-within:ring-2 focus-within:ring-black dark:focus-within:ring-white transition-shadow outline-none"
       >
         <input
           type="text"
@@ -216,7 +216,7 @@ export function Playlist() {
         <button
           type="submit"
           disabled={creating || !newPlaylistName.trim()}
-          className="px-5 sm:px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all active:scale-95 whitespace-nowrap"
+          className="px-5 sm:px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all active:scale-95 whitespace-nowrap"
         >
           <FaPlus size={14} /> <span className="hidden sm:inline">{creating ? "Creating..." : "Create"}</span>
         </button>
@@ -238,7 +238,7 @@ export function Playlist() {
         <>
           {playlists.length === 0 ? (
             <div className="text-center text-gray-500 my-16 flex flex-col items-center animate-fade-in">
-              <div className="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 shadow-inner">
+              <div className="w-24 h-24 bg-gray-100 dark:bg-muted rounded-full flex items-center justify-center mb-4 shadow-inner">
                 <FaMusic size={32} className="text-gray-400 dark:text-gray-500" />
               </div>
               <p className="text-xl font-medium text-gray-800 dark:text-gray-200">No playlists found</p>
@@ -254,10 +254,10 @@ export function Playlist() {
                 return (
                   <div 
                     key={playlist.id} 
-                    className={`bg-white dark:bg-gray-800 rounded-2xl shadow-sm border transition-all duration-300 overflow-hidden ${
+                    className={`bg-white dark:bg-card rounded-2xl shadow-sm border transition-all duration-300 overflow-hidden ${
                       isExpanded 
-                        ? 'border-gray-900 dark:border-gray-200 shadow-md ring-1 ring-black/5 dark:ring-white/5' 
-                        : 'border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 hover:shadow-md'
+                        ? 'border-gray-900 dark:border-white shadow-md ring-1 ring-black/5 dark:ring-white/5' 
+                        : 'border-gray-100 dark:border-border hover:border-gray-300 dark:hover:border-accent hover:shadow-md'
                     }`}
                   >
                     {/* Playlist Header */}
@@ -316,7 +316,7 @@ export function Playlist() {
                             e.stopPropagation();
                             setPlaylistToDelete(playlist);
                           }}
-                          className="w-10 h-10 rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors"
+                          className="w-10 h-10 rounded-full bg-transparent hover:bg-gray-100 dark:hover:bg-muted text-gray-400 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors"
                           title="Delete Playlist"
                         >
                           <FaTrash size={15} />
@@ -334,10 +334,10 @@ export function Playlist() {
                         isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
-                      <div className="border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/80 dark:bg-gray-900/40 p-3 sm:p-5">
+                      <div className="border-t border-gray-100 dark:border-border/50 bg-gray-50/80 dark:bg-background/40 p-3 sm:p-5">
                         {mappedSongs.length === 0 ? (
                           <div className="text-center py-10 text-gray-500">
-                            <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <div className="w-16 h-16 bg-gray-200 dark:bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
                               <FaMusic className="text-gray-400" size={24} />
                             </div>
                             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">This playlist is empty</p>
@@ -357,7 +357,7 @@ export function Playlist() {
                               return (
                                 <div 
                                   key={song.id} 
-                                  className="group flex items-center justify-between p-2 sm:p-3 hover:bg-white dark:hover:bg-gray-800 rounded-xl transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-sm"
+                                  className="group flex items-center justify-between p-2 sm:p-3 hover:bg-white dark:hover:bg-muted rounded-xl transition-all border border-transparent hover:border-gray-200 dark:hover:border-border hover:shadow-sm"
                                 >
                                   <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                                      <span className="text-sm font-medium text-gray-400 w-4 sm:w-6 text-center tabular-nums hidden sm:block">
@@ -423,18 +423,18 @@ export function Playlist() {
       {/* Custom Delete Confirmation Modal */}
       {playlistToDelete && (
         <div className="fixed inset-0 bg-transparent z-50 flex items-center justify-center p-4 transition-all">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 w-full max-w-sm overflow-hidden transform transition-all scale-100">
+          <div className="bg-white dark:bg-background rounded-2xl shadow-2xl border border-gray-200 dark:border-border w-full max-w-sm overflow-hidden transform transition-all scale-100">
             <div className="p-6">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Delete Playlist?</h3>
               <p className="text-gray-500 dark:text-gray-400 text-sm">
                 Are you sure you want to delete <span className="font-semibold text-black dark:text-white">"{playlistToDelete.name}"</span>? This action cannot be undone.
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 flex gap-3 justify-end border-t border-gray-100 dark:border-gray-800">
+            <div className="bg-gray-50 dark:bg-card/50 px-6 py-4 flex gap-3 justify-end border-t border-gray-100 dark:border-border">
               <button
                 onClick={() => setPlaylistToDelete(null)}
                 disabled={isDeleting}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg hover:bg-gray-50 dark:hover:bg-accent transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

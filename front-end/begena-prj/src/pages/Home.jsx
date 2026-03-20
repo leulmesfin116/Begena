@@ -2,7 +2,6 @@ import podcast from "../assets/podcast.jpeg";
 import newSong from "../assets/newSong.jpeg";
 import playlist from "../assets/playlist.jpeg";
 import Lofi from "../assets/Lofu.jpeg";
-import recent from "../assets/recent.jpeg";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Favourite from "../assets/favourite.jpeg";
@@ -23,9 +22,6 @@ export function Home() {
   }
   function handleFav() {
     navigate("/Favourite");
-  }
-  function handleRecent() {
-    navigate("/Recent");
   }
   return (
     <>
@@ -117,23 +113,6 @@ export function Home() {
           </div>
         </motion.div>
         {/* ---------the 5th div----------- */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          onClick={handleRecent}
-          className="card animate cursor-pointer sm:col-span-2 lg:col-span-1"
-        >
-          <img className="image" src={recent} alt="recent" />
-          <div>
-            <h2 className="font-bold text-lg sm:text-xl">
-              Recently played Music
-            </h2>
-            <p className="text-sm sm:text-base">
-              your recently played music are here.
-            </p>
-          </div>
-        </motion.div>
         {/* -------the 6th div----------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

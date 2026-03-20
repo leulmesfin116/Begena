@@ -1,0 +1,14 @@
+/*
+  Warnings:
+
+  - You are about to drop the `Recentlyplayed` table. If the table is not empty, all the data it contains will be lost.
+
+*/
+-- DropForeignKey
+ALTER TABLE "Recentlyplayed" DROP CONSTRAINT "Recentlyplayed_songId_fkey";
+
+-- DropForeignKey
+ALTER TABLE "Recentlyplayed" DROP CONSTRAINT "Recentlyplayed_userId_fkey";
+
+-- DropTable
+DROP TABLE "Recentlyplayed";

@@ -1,12 +1,15 @@
 import express from "express";
 import upload from "../middleware/uploadMiddleware.js";
 import { prisma } from "../config/db.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { adminMiddleware } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-// Upload a song
 router.post(
   "/upload",
+  authMiddleware, // ensure user is logged in
+  adminMiddleware, // ensure user is ADMIN
   upload.fields([
     { name: "audio", maxCount: 1 },
     { name: "poster", maxCount: 1 },
@@ -29,14 +32,13 @@ router.post(
         ? `http://localhost:5000/uploads/${posterFile.filename}`
         : "/default-poster.jpg";
 
-      // Save to database
       const newSong = await prisma.song.create({
         data: {
           title,
           artist,
           audioUrl,
           posterUrl,
-          createdBy: "admin", // Assuming admin or creator ID for now
+          createdBy: req.user.id, // store admin ID
         },
       });
 
@@ -51,16 +53,4 @@ router.post(
   },
 );
 
-// Get all uploaded songs
-router.get("/uploads", async (req, res) => {
-  try {
-    const songs = await prisma.song.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    res.json(songs);
-  } catch (error) {
-    console.error("Fetch error:", error);
-    res.status(500).json({ error: "Failed to fetch songs" });
-  }
-});
 export default router;
