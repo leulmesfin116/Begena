@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { signupUser } from "../api/auth.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext.jsx";
 
 export function Signup() {
   const [name, setName] = useState("");
@@ -9,6 +10,8 @@ export function Signup() {
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useUser();
+
   const handleSignup = async (e) => {
     e.preventDefault();
     // ensure email contains a domain — if user omitted '@', append @gmail.com
@@ -19,7 +22,7 @@ export function Signup() {
     const data = await signupUser(name, finalEmail, password);
 
     if (data.token) {
-      localStorage.setItem("token", data.token);
+      login(data.token, data.role || "USER");
       navigate("/");
     } else {
       setMessage("Signup failed: " + data.message);

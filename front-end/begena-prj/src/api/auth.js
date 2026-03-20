@@ -7,7 +7,7 @@ export async function loginUser(email, password) {
     });
     const data = await res.json();
     if (res.ok) {
-      return { token: data.token, ...data };
+      return { token: data.token, role: data.data.role, ...data.data };
     } else {
       return { message: data.message };
     }
@@ -24,7 +24,7 @@ export async function signupUser(name, email, password) {
     });
     const data = await res.json();
     if (res.ok) {
-      return { token: data.token, ...data };
+      return { token: data.token, role: data.data.role, ...data.data };
     } else {
       return { message: data.message };
     }

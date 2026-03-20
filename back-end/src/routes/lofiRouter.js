@@ -1,6 +1,8 @@
 import express from "express";
 import multer from "multer";
 import { uploadLofi, getLofiTracks } from "../controller/lofiController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { adminMiddleware } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
@@ -12,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post("/upload", upload.single("file"), uploadLofi);
+router.post("/upload", authMiddleware, adminMiddleware, upload.fields([{ name: "file", maxCount: 1 }, { name: "poster", maxCount: 1 }]), uploadLofi);
 router.get("/", getLofiTracks);
 
 export default router;

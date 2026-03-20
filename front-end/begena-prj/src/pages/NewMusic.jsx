@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAudio } from "../context/AudioContext";
-import { FaPlay, FaPause, FaHeart, FaPlus } from "react-icons/fa";
+import { useUser } from "../context/UserContext";
+import { FaPlay, FaPause, FaHeart, FaPlus, FaTrash } from "react-icons/fa";
 
 export function NewMusic() {
   const [songs, setSongs] = useState([]);
@@ -10,11 +11,13 @@ export function NewMusic() {
   const [error, setError] = useState("");
   const [openPlaylistMenuId, setOpenPlaylistMenuId] = useState(null);
   const [toastMsg, setToastMsg] = useState("");
+  const [songToDelete, setSongToDelete] = useState(null);
   const location = useLocation();
   const fromPlaylist = location.state?.fromPlaylist;
 
   const { playSong, currentSong, isPlaying, likedSongs, toggleLike } =
     useAudio();
+  const { isAdmin } = useUser();
 
   useEffect(() => {
     const fetchSongsAndPlaylists = async () => {
@@ -116,7 +119,36 @@ export function NewMusic() {
     }
   };
 
-  const showToast = (msg) => {
+  const handleDeleteClick = (song) => {
+    setSongToDelete(song);
+  };
+
+  const confirmDelete = async () => {
+    if (!songToDelete) return;
+    const songId = songToDelete.id;
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5000/api/upload/${songId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        setSongs(songs.filter((s) => s.id !== songId));
+        showToast(`"${songToDelete.title}" deleted successfully`);
+      } else {
+        const data = await res.json();
+        showToast(data.error || "Failed to delete song", true);
+      }
+    } catch (err) {
+      showToast("Error deleting song", true);
+    } finally {
+      setSongToDelete(null);
+    }
+  };
+
+  const showToast = (msg, isError = false) => {
     setToastMsg(msg);
     setTimeout(() => setToastMsg(""), 3000);
   };
@@ -142,8 +174,39 @@ export function NewMusic() {
 
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full shadow-lg transition-all animate-fade-in">
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-full shadow-lg transition-all animate-fade-in border border-gray-200 dark:border-border">
           {toastMsg}
+        </div>
+      )}
+
+      {/* Custom Delete Confirmation Modal */}
+      {songToDelete && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/20 rounded-2xl shadow-2xl max-w-sm w-full p-8 transform animate-scale-in text-white text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="w-16 h-16 rounded-full border-2 border-white/50 flex items-center justify-center">
+                <FaTrash size={24} className="text-white" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-4 tracking-tight">Delete Song?</h2>
+            <p className="text-white/80 mb-8 text-sm leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-white underline underline-offset-4">"{songToDelete.title}"</span>? This action is permanent and cannot be undone.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={confirmDelete}
+                className="w-full py-3 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition-all uppercase tracking-widest text-xs"
+              >
+                Confirm Delete
+              </button>
+              <button
+                onClick={() => setSongToDelete(null)}
+                className="w-full py-3 rounded-lg border border-white/30 text-white font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
+              >
+                Keep Song
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -251,6 +314,17 @@ export function NewMusic() {
                     </div>
                   )}
                 </div>
+              )}
+
+              {/* Admin Delete Button */}
+              {isAdmin && (
+                <button
+                  onClick={() => handleDeleteClick(song)}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                  title="Delete Song"
+                >
+                  <FaTrash size={14} />
+                </button>
               )}
 
               {/* Play Button */}

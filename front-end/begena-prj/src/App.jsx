@@ -8,30 +8,22 @@ import { Playlist } from "./pages/Playlist.jsx";
 import { LofiMusic } from "./pages/LofiMusic.jsx";
 import { Favourite } from "./pages/Favourite.jsx";
 import { Search } from "./pages/Search.jsx";
+import { Upload } from "./pages/Upload.jsx";
+import { AdminUploads } from "./pages/AdminUploads.jsx";
 
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "./ThemeContext.jsx";
 import { GlobalPlayer } from "./components/GlobalPlayer.jsx";
+import { useUser } from "./context/UserContext.jsx";
 
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token")),
-  );
+  const { isLoggedIn, isAdmin, logout } = useUser();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
-
-  // keep login state in sync with other tabs
-  useEffect(() => {
-    const handleStorage = () => {
-      setIsLoggedIn(Boolean(localStorage.getItem("token")));
-    };
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
 
   // handling searches
   const [search, setSearch] = useState("");
@@ -50,8 +42,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
+    logout();
     setShowUserMenu(false);
     navigate("/Login");
   };
@@ -76,6 +67,16 @@ function App() {
               <Link className="nav" to="/signup">
                 Signup
               </Link>
+              {isAdmin && (
+                <>
+                  <Link className="nav font-bold text-gray-900 dark:text-gray-200" to="/upload">
+                    Music
+                  </Link>
+                  <Link className="nav font-bold text-gray-900 dark:text-gray-200" to="/admin/uploads">
+                    Pod/Lofi
+                  </Link>
+                </>
+              )}
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
               <button
@@ -163,13 +164,24 @@ function App() {
                 >
                   Login
                 </Link>
-                <Link
-                  className="nav block px-3 py-2 font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors"
-                  to="/upload"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Upload
-                </Link>
+                {isAdmin && (
+                  <>
+                    <Link
+                      className="nav block px-3 py-2 font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors"
+                      to="/upload"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Upload Music
+                    </Link>
+                    <Link
+                      className="nav block px-3 py-2 font-bold text-gray-900 hover:text-gray-600 dark:text-gray-200 dark:hover:text-white transition-colors"
+                      to="/admin/uploads"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Upload Pod/Lofi
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -183,6 +195,8 @@ function App() {
         <Route path="/Podcast" element={<Podcast />} />
         <Route path="/Playlist" element={<Playlist />} />
         <Route path="/LofiMusic" element={<LofiMusic />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/admin/uploads" element={<AdminUploads />} />
 
         <Route path="/Favourite" element={<Favourite />} />
         <Route path="/Search" element={<Search />} />

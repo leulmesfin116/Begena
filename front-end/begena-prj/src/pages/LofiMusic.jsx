@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useAudio } from "../context/AudioContext";
-import { FaPlay, FaPause, FaUpload, FaHeart } from "react-icons/fa";
+import { FaPlay, FaPause, FaHeart, FaTrash } from "react-icons/fa";
+import { useUser } from "../context/UserContext";
 
 export function LofiMusic() {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const fileInput = useRef();
-  const [uploadLoading, setUploadLoading] = useState(false);
+  const [songToDelete, setSongToDelete] = useState(null);
 
   const { playSong, currentSong, isPlaying, likedSongs, toggleLike } = useAudio();
+  const { isAdmin } = useUser();
 
   const fetchLofi = async () => {
     try {
@@ -28,27 +30,31 @@ export function LofiMusic() {
     fetchLofi();
   }, []);
 
-  const handleUpload = async (e) => {
-    if (e.target.files && e.target.files[0]) {
-        const file = e.target.files[0];
-        setUploadLoading(true);
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("title", file.name.split('.')[0]);
+  const handleDeleteClick = (song) => {
+    setSongToDelete(song);
+  };
 
-        try {
-            const res = await fetch("http://localhost:5000/api/lofi/upload", {
-                method: "POST",
-                body: formData,
-            });
-            if (!res.ok) throw new Error("Upload failed");
-            await fetchLofi();
-            if (fileInput.current) fileInput.current.value = "";
-        } catch (err) {
-            alert(err.message);
-        } finally {
-            setUploadLoading(false);
-        }
+  const confirmDelete = async () => {
+    if (!songToDelete) return;
+    const { id } = songToDelete;
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5000/api/upload/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        setSongs(songs.filter((s) => s.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete track");
+      }
+    } catch (err) {
+      alert("Error deleting track");
+    } finally {
+      setSongToDelete(null);
     }
   };
 
@@ -65,23 +71,6 @@ export function LofiMusic() {
                 <h1 className="text-3xl font-bold text-black dark:text-white">Lofi & Chill</h1>
                 <p className="text-gray-500 mt-1">Relax and listen to uploaded beats</p>
             </div>
-            <div>
-                <input 
-                    type="file" 
-                    ref={fileInput} 
-                    className="hidden" 
-                    id="lofi-upload" 
-                    accept="audio/*"
-                    onChange={handleUpload}
-                />
-                <label 
-                    htmlFor="lofi-upload" 
-                    className={`cursor-pointer bg-black dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-full flex items-center gap-2 hover:scale-105 active:scale-95 transition-all font-semibold shadow-lg ${uploadLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                    <FaUpload size={14} />
-                    {uploadLoading ? "Uploading..." : "Upload New Beat"}
-                </label>
-            </div>
         </div>
 
       {error && (
@@ -94,39 +83,74 @@ export function LofiMusic() {
         {songs.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 dark:bg-card/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-border">
                 <p className="text-gray-500">No lofi tracks uploaded yet.</p>
-                <p className="text-sm text-gray-400 mt-1">Be the first to share a beat!</p>
             </div>
         ) : (
-            songs.map((song) => (
-                <div
-                    key={song.id}
-                    className="group flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md border border-gray-100 dark:border-border rounded-2xl p-3 gap-4 transition-all"
-                >
-                    <div className="relative w-14 h-14 flex-shrink-0">
-                        <img
-                            src={song.posterUrl || "/default-poster.jpg"}
-                            alt={song.title}
-                            className="w-full h-full object-cover rounded-xl shadow-inner"
-                        />
-                        {currentSong?.id === song.id && isPlaying && (
-                            <div className="absolute inset-0 bg-black/20 rounded-xl flex items-center justify-center">
-                                <div className="flex gap-1 items-end h-4">
-                                    <div className="w-1 bg-white animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                    <div className="w-1 bg-white animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                    <div className="w-1 bg-white animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+            songs.map((song) => {
+                const isCurrent = currentSong?.id === song.id;
+                const active = isCurrent && isPlaying;
 
-                    <div className="flex-1 min-w-0">
-                        <h2 className={`font-bold text-lg truncate ${currentSong?.id === song.id ? "text-indigo-600 dark:text-indigo-400" : "text-gray-900 dark:text-gray-100"}`}>
-                            {song.title}
-                        </h2>
-                        <p className="text-gray-500 text-sm truncate">Lofi Community Beat</p>
-                    </div>
+                return (
+                    <motion.div
+                        key={song.id}
+                        initial={false}
+                        animate={active ? { 
+                            scale: 1.02, 
+                            borderColor: "rgba(0,0,0,0.3)",
+                            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)"
+                        } : { 
+                            scale: 1,
+                            borderColor: "transparent",
+                            boxShadow: "none"
+                        }}
+                        className={`group flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md border border-gray-100 dark:border-border rounded-2xl p-3 gap-4 transition-all overflow-hidden ${active ? "ring-2 ring-black/5 dark:ring-white/10" : ""}`}
+                    >
+                        <div className="relative w-14 h-14 flex-shrink-0">
+                            <img
+                                src={song.posterUrl || "/default-poster.jpg"}
+                                alt={song.title}
+                                className={`w-full h-full object-cover rounded-xl shadow-inner transition-transform duration-700 ${active ? "scale-110" : ""}`}
+                            />
+                            {active && (
+                                <div className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center">
+                                    <div className="flex gap-0.5 items-end h-5">
+                                        {[...Array(4)].map((_, i) => (
+                                            <motion.div
+                                                key={i}
+                                                animate={{
+                                                    height: [4, 16, 8, 20, 10],
+                                                }}
+                                                transition={{
+                                                    duration: 0.6 + (i * 0.1),
+                                                    repeat: Infinity,
+                                                    ease: "easeInOut"
+                                                }}
+                                                className="w-1 bg-white rounded-full"
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                            <h2 className={`font-bold text-lg truncate ${isCurrent ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-400"}`}>
+                                {song.title}
+                            </h2>
+                            <p className="text-gray-500 text-sm truncate uppercase tracking-widest text-[10px] opacity-70">
+                                {active ? "Now Playing Lofi" : "Lofi Beat"}
+                            </p>
+                        </div>
 
                     <div className="flex items-center gap-3">
+                        {isAdmin && (
+                            <button
+                                onClick={() => handleDeleteClick(song)}
+                                className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                                title="Delete"
+                            >
+                                <FaTrash size={16} />
+                            </button>
+                        )}
                         <button
                             onClick={() => toggleLike(song.id)}
                             className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
@@ -143,17 +167,49 @@ export function LofiMusic() {
                             onClick={() => playSong(song, songs)}
                             className="w-11 h-11 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-all hover:scale-110 shadow-lg active:scale-95"
                         >
-                            {currentSong?.id === song.id && isPlaying ? (
+                            {active ? (
                                 <FaPause size={16} />
                             ) : (
                                 <FaPlay size={16} className="ml-1" />
                             )}
                         </button>
                     </div>
-                </div>
-            ))
-        )}
+                </motion.div>
+            );
+        })
+      )}
       </div>
+
+      {/* Custom Delete Confirmation Modal */}
+      {songToDelete && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/20 rounded-2xl shadow-2xl max-sm w-full p-8 transform animate-scale-in text-white text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="w-16 h-16 rounded-full border-2 border-white/50 flex items-center justify-center">
+                <FaTrash size={24} className="text-white" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-4 tracking-tight">Delete Track?</h2>
+            <p className="text-white/80 mb-8 text-sm leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-white underline underline-offset-4">"{songToDelete.title}"</span>? This action is permanent.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={confirmDelete}
+                className="w-full py-3 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition-all uppercase tracking-widest text-xs"
+              >
+                Confirm Delete
+              </button>
+              <button
+                onClick={() => setSongToDelete(null)}
+                className="w-full py-3 rounded-lg border border-white/30 text-white font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
+              >
+                Keep Track
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

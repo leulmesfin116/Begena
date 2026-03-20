@@ -3,6 +3,7 @@ import { useState } from "react";
 import { loginUser } from "../api/auth.js"; // make sure this file exists
 import { useNavigate } from "react-router-dom";
 import { useAudio } from "../context/AudioContext";
+import { useUser } from "../context/UserContext";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -10,12 +11,14 @@ export function Login() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const { refreshLikes } = useAudio();
+  const { login } = useUser();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = await loginUser(email, password);
 
     if (data.token) {
-      localStorage.setItem("token", data.token);
+      login(data.token, data.role);
       await refreshLikes(); // Load user's favorites immediately
       navigate("/");
     } else {

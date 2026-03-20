@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import { useUser } from "../context/UserContext";
 
 export function Podcast() {
   const [podcasts, setPodcasts] = useState([]);
   const [playingVideoId, setPlayingVideoId] = useState(null);
-
+  const { isAdmin } = useUser();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [podcastToDelete, setPodcastToDelete] = useState(null);
 
   useEffect(() => {
-    // Fetch podcasts from backend
+    fetchPodcasts();
+  }, []);
+
+  const fetchPodcasts = () => {
     setLoading(true);
     fetch("http://localhost:5000/api/podcasts")
       .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
         return res.json();
       })
       .then((data) => {
@@ -23,12 +27,38 @@ export function Podcast() {
       })
       .catch((err) => {
         console.error("Podcast fetch error:", err);
-        setError(
-          "Failed to load podcasts. Please ensure the backend is running.",
-        );
+        setError("Failed to load podcasts.");
       })
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  const handleDeleteClick = (p) => {
+    setPodcastToDelete(p);
+  };
+
+  const confirmDelete = async () => {
+    if (!podcastToDelete) return;
+    const { id, title } = podcastToDelete;
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5000/api/podcasts/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        setPodcasts(podcasts.filter((p) => p.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete podcast");
+      }
+    } catch (err) {
+      alert("Error deleting podcast");
+    } finally {
+      setPodcastToDelete(null);
+    }
+  };
 
   // Helper to get YouTube embed URL from full URL
   const getEmbedUrl = (url) => {
@@ -89,17 +119,62 @@ export function Podcast() {
                 </div>
               )}
             </div>
-            <div className="p-5">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {p.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 line-clamp-2">
-                {p.description}
-              </p>
+            <div className="p-5 flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  {p.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 line-clamp-2">
+                  {p.description}
+                </p>
+              </div>
+              {isAdmin && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteClick(p);
+                  }}
+                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                  title="Delete"
+                >
+                  <FaTrash size={16} />
+                </button>
+              )}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Custom Delete Confirmation Modal */}
+      {podcastToDelete && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-white/20 rounded-2xl shadow-2xl max-w-sm w-full p-8 transform animate-scale-in text-white text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="w-16 h-16 rounded-full border-2 border-white/50 flex items-center justify-center">
+                <FaTrash size={24} className="text-white" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-4 tracking-tight">Delete Episode?</h2>
+            <p className="text-white/80 mb-8 text-sm leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-white underline underline-offset-4">"{podcastToDelete.title}"</span>? This action is permanent.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={confirmDelete}
+                className="w-full py-3 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition-all uppercase tracking-widest text-xs"
+              >
+                Confirm Delete
+              </button>
+              <button
+                onClick={() => setPodcastToDelete(null)}
+                className="w-full py-3 rounded-lg border border-white/30 text-white font-bold hover:bg-white/10 transition-all uppercase tracking-widest text-xs"
+              >
+                Keep Episode
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

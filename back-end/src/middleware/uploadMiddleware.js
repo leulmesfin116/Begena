@@ -7,9 +7,12 @@ const storage = multer.diskStorage({
     cb(null, "uploads/"); // where files are saved
   },
   filename: (req, file, cb) => {
-    // Add timestamp + original name to avoid collisions
+    // Add timestamp + sanitized original name to avoid collisions and URL issues
     const ext = path.extname(file.originalname);
-    const name = path.basename(file.originalname, ext);
+    const name = path.basename(file.originalname, ext)
+      .replace(/[^a-z0-9]/gi, "-") // replace anything not alphanumeric with -
+      .replace(/-+/g, "-")        // replace multiple - with a single -
+      .replace(/^-|-$/g, "");     // remove leading/trailing -
     cb(null, `${Date.now()}-${name}${ext}`);
   },
 });
