@@ -10,6 +10,7 @@ import { Favourite } from "./pages/Favourite.jsx";
 import { Search } from "./pages/Search.jsx";
 import { Upload } from "./pages/Upload.jsx";
 import { AdminUploads } from "./pages/AdminUploads.jsx";
+import { About } from "./pages/About.jsx";
 
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
@@ -66,6 +67,9 @@ function App() {
               </Link>
               <Link className="nav" to="/signup">
                 Signup
+              </Link>
+              <Link className="nav" to="/about">
+                About
               </Link>
               {isAdmin && (
                 <>
@@ -164,6 +168,20 @@ function App() {
                 >
                   Login
                 </Link>
+                <Link
+                  className="nav block px-3 py-2"
+                  to="/signup"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Signup
+                </Link>
+                <Link
+                  className="nav block px-3 py-2"
+                  to="/about"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </Link>
                 {isAdmin && (
                   <>
                     <Link
@@ -200,6 +218,7 @@ function App() {
 
         <Route path="/Favourite" element={<Favourite />} />
         <Route path="/Search" element={<Search />} />
+        <Route path="/about" element={<About />} />
       </Routes>
       <GlobalPlayer />
     </>

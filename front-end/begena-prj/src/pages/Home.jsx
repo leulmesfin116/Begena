@@ -5,6 +5,7 @@ import Lofi from "../assets/Lofu.jpeg";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Favourite from "../assets/favourite.jpeg";
+import { Github } from "lucide-react";
 export function Home() {
   const navigate = useNavigate();
   // handing click events
@@ -130,6 +131,22 @@ export function Home() {
           </div>
         </motion.div>
       </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 1.6 }}
+        className="flex justify-center mt-12 mb-8"
+      >
+        <a
+          href="https://github.com/leulmesfin116/Begena"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-black dark:bg-white text-white dark:text-black hover:scale-105 transition-transform shadow-lg"
+        >
+          <Github size={20} />
+          <span className="font-bold text-lg">GitHub</span>
+        </a>
+      </motion.div>
     </>
   );
 }

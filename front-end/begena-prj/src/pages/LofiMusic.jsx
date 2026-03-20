@@ -176,8 +176,7 @@ export function LofiMusic() {
                     </div>
                 </motion.div>
             );
-        })
-      )}
+        }))}
       </div>
 
       {/* Custom Delete Confirmation Modal */}
