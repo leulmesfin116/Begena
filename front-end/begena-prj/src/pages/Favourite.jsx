@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAudio } from "../context/AudioContext";
 import { FaPlay, FaPause, FaHeart } from "react-icons/fa";
+import { normalizeSongMedia } from "../utils/mediaUrl";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 export function Favourite() {
   const [songs, setSongs] = useState([]);
@@ -20,7 +24,7 @@ export function Favourite() {
           return;
         }
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/fav`, {
+        const res = await fetch(`${API_BASE_URL}/fav`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -30,27 +34,23 @@ export function Favourite() {
           );
         });
 
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || `Server error: ${res.status}`);
+        const text = await res.text();
+        let data = [];
+        try {
+          data = text ? JSON.parse(text) : [];
+        } catch {
+          throw new Error(
+            "Server returned invalid data. Check VITE_API_URL or backend endpoint.",
+          );
         }
-
-        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(
+            data?.message || data?.error || `Server error: ${res.status}`,
+          );
+        }
         const mapped = data
           .filter((song) => song !== null)
-          .map((song) => {
-            let pUrl = song.posterUrl || "/default-poster.jpg";
-            if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-              pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
-aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
-            }
-            return {
-              ...song,
-              audioUrl: aUrl,
-              posterUrl: pUrl,
-              artist: song.artist || "Unknown Artist",
-            };
-          });
+          .map((song) => normalizeSongMedia(song, API_BASE_URL));
         setSongs(mapped);
       } catch (err) {
         console.error("Favourite fetch error:", err);
@@ -64,7 +64,7 @@ aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
   }, [likedSongs]); // Re-fetch when likedSongs set changes in context
 
   return (
-    <div className="max-w-5xl mx-auto p-6 md:pb-32 pb-24">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 md:pb-32 pb-24">
       <div className="m-4 sm:m-8 mb-8">
         <h1 className="text-black dark:text-white text-3xl font-bold text-center">
           Favourite Songs
@@ -83,13 +83,13 @@ aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
         {songs.map((song) => (
           <div
             key={song.id}
-            className="flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md rounded-xl p-3 gap-4 transition-all"
+            className="flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md rounded-xl p-2.5 sm:p-3 gap-3 sm:gap-4 transition-all"
           >
             {/* Poster */}
             <img
               src={song.posterUrl || "/default-poster.jpg"}
               alt={song.title}
-              className="w-16 h-16 object-cover rounded-md shadow-sm"
+              className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-md shadow-sm"
             />
 
             {/* Song info */}
@@ -102,26 +102,26 @@ aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
               </p>
             </div>
 
-            <div className="flex items-center gap-3 pr-2">
+            <div className="flex items-center gap-2 sm:gap-3 pr-1 sm:pr-2">
               <button
                 onClick={() => toggleLike(song.id)}
-                className="text-red-500 hover:scale-110 transition-transform"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-red-500 bg-red-50 dark:bg-red-900/20 hover:scale-105 active:scale-95 transition-transform"
                 title="Remove from Favorites"
               >
-                <FaHeart size={20} />
+                <FaHeart size={16} />
               </button>
 
               <button
                 onClick={() => playSong(song, songs)}
-                className="w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-transform hover:scale-105 shadow-md flex-shrink-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center transition-transform hover:scale-105 shadow-md flex-shrink-0"
                 title={
                   currentSong?.id === song.id && isPlaying ? "Pause" : "Play"
                 }
               >
                 {currentSong?.id === song.id && isPlaying ? (
-                  <FaPause size={16} />
+                  <FaPause size={14} />
                 ) : (
-                  <FaPlay size={16} className="ml-1" />
+                  <FaPlay size={14} className="ml-0.5" />
                 )}
               </button>
             </div>

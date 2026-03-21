@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaMusic, FaImage, FaUpload, FaSpinner, FaExclamationTriangle } from "react-icons/fa";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+
 export function Upload() {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
@@ -52,7 +55,7 @@ export function Upload() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/upload`, {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,7 +63,7 @@ export function Upload() {
         body: formData,
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (res.ok) {
         setMessage({ type: "success", text: "Song uploaded successfully!" });
@@ -71,7 +74,10 @@ export function Upload() {
         // Clear file inputs
         e.target.reset();
       } else {
-        setMessage({ type: "error", text: data.error || "Upload failed" });
+        setMessage({
+          type: "error",
+          text: data.error || data.message || "Upload failed",
+        });
       }
     } catch (error) {
       console.error("Upload error:", error);

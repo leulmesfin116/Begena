@@ -19,7 +19,7 @@ export const uploadPodcast = async (req, res) => {
         title,
         description: description || "",
         youtubeUrl,
-        thumbnail: thumbnail || null,
+        thumbnail: req.file?.path || thumbnail || null,
       },
     });
 

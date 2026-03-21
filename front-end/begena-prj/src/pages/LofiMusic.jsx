@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import { useAudio } from "../context/AudioContext";
 import { FaPlay, FaPause, FaHeart, FaTrash } from "react-icons/fa";
 import { useUser } from "../context/UserContext";
+import { normalizeSongMedia } from "../utils/mediaUrl";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 export function LofiMusic() {
   const [songs, setSongs] = useState([]);
@@ -15,10 +19,13 @@ export function LofiMusic() {
 
   const fetchLofi = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lofi`);
+      const res = await fetch(`${API_BASE_URL}/api/lofi`);
       if (!res.ok) throw new Error("Failed to fetch lofi music");
       const data = await res.json();
-      setSongs(data);
+      const mapped = (Array.isArray(data) ? data : []).map((song) =>
+        normalizeSongMedia(song, API_BASE_URL),
+      );
+      setSongs(mapped);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -40,7 +47,7 @@ export function LofiMusic() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/upload/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

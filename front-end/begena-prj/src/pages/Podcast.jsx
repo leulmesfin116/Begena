@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { useUser } from "../context/UserContext";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+
 export function Podcast() {
   const [podcasts, setPodcasts] = useState([]);
   const [playingVideoId, setPlayingVideoId] = useState(null);
@@ -16,10 +19,24 @@ export function Podcast() {
 
   const fetchPodcasts = () => {
     setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL}/api/podcasts`)
+    fetch(`${API_BASE_URL}/api/podcasts`)
       .then((res) => {
-        if (!res.ok) throw new Error(`Server error: ${res.status}`);
-        return res.json();
+        return res.text().then((text) => {
+          let data = [];
+          try {
+            data = text ? JSON.parse(text) : [];
+          } catch {
+            throw new Error(
+              "Server returned invalid data. Check API URL/backend.",
+            );
+          }
+          if (!res.ok) {
+            const msg =
+              data?.message || data?.error || `Server error: ${res.status}`;
+            throw new Error(msg);
+          }
+          return data;
+        });
       })
       .then((data) => {
         setPodcasts(data);
@@ -27,7 +44,7 @@ export function Podcast() {
       })
       .catch((err) => {
         console.error("Podcast fetch error:", err);
-        setError("Failed to load podcasts.");
+        setError(err.message || "Failed to load podcasts.");
       })
       .finally(() => setLoading(false));
   };
@@ -42,7 +59,7 @@ export function Podcast() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/podcasts/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/podcasts/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -69,7 +86,7 @@ export function Podcast() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 md:pb-32 pb-24">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 md:pb-32 pb-24">
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">
         Podcasts
       </h1>
@@ -81,7 +98,7 @@ export function Podcast() {
         <p className="text-center py-10 text-gray-500">No podcasts found.</p>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
         {podcasts.map((p) => (
           <div
             key={p.id}
@@ -104,10 +121,7 @@ export function Podcast() {
                   onClick={() => setPlayingVideoId(p.id)}
                 >
                   <img
-                    src={
-                      p.thumbnail ||
-                      `https://img.youtube.com/vi/${getEmbedUrl(p.youtubeUrl)?.split("/").pop()}/0.jpg`
-                    }
+                    src={p.thumbnail || `https://img.youtube.com/vi/${p.youtubeUrl?.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/)?.[1] || ""}/0.jpg`}
                     alt={p.title}
                     className="w-full h-full object-cover"
                   />
@@ -119,12 +133,12 @@ export function Podcast() {
                 </div>
               )}
             </div>
-            <div className="p-5 flex justify-between items-start">
+            <div className="p-4 sm:p-5 flex justify-between items-start gap-3">
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2">
                   {p.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 line-clamp-2">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 line-clamp-2">
                   {p.description}
                 </p>
               </div>

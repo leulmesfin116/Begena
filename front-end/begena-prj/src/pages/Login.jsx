@@ -28,15 +28,15 @@ export function Login() {
 
   return (
     <>
-      <div className="center m-4 sm:m-8">
+      <div className="center mt-6 px-4 sm:mt-10">
         <h1 className="text-black dark:text-white p-3 text-2xl sm:text-3xl font-bold text-center">
           Login
         </h1>
-        <p className="text-center">create an account!</p>
+        <p className="text-center text-sm sm:text-base">Create an account!</p>
       </div>
 
       <form
-        className="center gap-4 p-2 max-w-md mx-auto"
+        className="center gap-4 px-4 pb-28 sm:pb-32 max-w-md mx-auto w-full"
         onSubmit={handleLogin}
       >
         <input
@@ -67,9 +67,9 @@ export function Login() {
           </span>
         </button>
 
-        <p className="text-center">{message}</p>
+        <p className="text-center text-sm break-words">{message}</p>
 
-        <div className="flex flex-col sm:flex-row gap-3 items-center">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-center text-sm sm:text-base">
           <p>Need an account?</p>
           <Link
             className="text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300"

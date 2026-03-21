@@ -9,11 +9,11 @@ export const uploadLofi = async (req, res) => {
       return res.status(400).json({ error: "No audio file uploaded" });
     }
 
-    const audioUrl = `http://localhost:5000/lofi/${files.file[0].filename}`;
+    const audioUrl = files.file[0].path;
     let posterUrl = "/default-poster.jpg";
 
     if (files.poster && files.poster[0]) {
-        posterUrl = `http://localhost:5000/lofi/${files.poster[0].filename}`;
+      posterUrl = files.poster[0].path;
     }
 
     // Save track to DB as a regular Song with "lofi" genre
@@ -24,7 +24,7 @@ export const uploadLofi = async (req, res) => {
         audioUrl,
         posterUrl,
         genres: ["lofi"],
-        createdBy: "admin"
+        createdBy: req.user.id,
       },
     });
 

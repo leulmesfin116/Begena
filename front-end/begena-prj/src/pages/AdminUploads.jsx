@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaPodcast, FaMusic, FaUpload, FaSpinner, FaExclamationTriangle, FaYoutube, FaLink, FaAlignLeft } from "react-icons/fa";
+import { FaPodcast, FaMusic, FaUpload, FaSpinner, FaExclamationTriangle, FaYoutube, FaLink, FaAlignLeft, FaImage } from "react-icons/fa";
 import { useUser } from "../context/UserContext";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 export function AdminUploads() {
   const [activeTab, setActiveTab] = useState("podcast");
@@ -14,7 +17,7 @@ export function AdminUploads() {
   const [podTitle, setPodTitle] = useState("");
   const [podDesc, setPodDesc] = useState("");
   const [podYoutube, setPodYoutube] = useState("");
-  const [podThumb, setPodThumb] = useState("");
+  const [podThumbFile, setPodThumbFile] = useState(null);
 
   // Lofi Form State
   const [lofiTitle, setLofiTitle] = useState("");
@@ -39,29 +42,35 @@ export function AdminUploads() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/podcasts`, {
+      const formData = new FormData();
+      formData.append("title", podTitle);
+      formData.append("description", podDesc);
+      formData.append("youtubeUrl", podYoutube);
+      if (podThumbFile) {
+        formData.append("thumbnail", podThumbFile);
+      }
+
+      const res = await fetch(`${API_BASE_URL}/api/podcasts`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          title: podTitle,
-          description: podDesc,
-          youtubeUrl: podYoutube,
-          thumbnail: podThumb,
-        }),
+        body: formData,
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setMessage({ type: "success", text: "Podcast published successfully!" });
         setPodTitle("");
         setPodDesc("");
         setPodYoutube("");
-        setPodThumb("");
+        setPodThumbFile(null);
+        if (e?.target?.reset) e.target.reset();
       } else {
-        setMessage({ type: "error", text: data.error || "Upload failed" });
+        setMessage({
+          type: "error",
+          text: data.error || data.message || "Upload failed",
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: "Network error. Please try again." });
@@ -89,7 +98,7 @@ export function AdminUploads() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lofi/upload`, {
+      const res = await fetch(`${API_BASE_URL}/api/lofi/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -97,7 +106,7 @@ export function AdminUploads() {
         body: formData,
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setMessage({ type: "success", text: "Lofi track uploaded successfully!" });
         setLofiTitle("");
@@ -105,7 +114,10 @@ export function AdminUploads() {
         setLofiPoster(null);
         e.target.reset();
       } else {
-        setMessage({ type: "error", text: data.error || "Upload failed" });
+        setMessage({
+          type: "error",
+          text: data.error || data.message || "Upload failed",
+        });
       }
     } catch (error) {
       setMessage({ type: "error", text: "Network error. Please try again." });
@@ -215,17 +227,27 @@ export function AdminUploads() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-400 mb-2">Thumbnail URL</label>
-                <div className="relative">
-                  <input
-                    type="url"
-                    placeholder="Image link (optional)"
-                    value={podThumb}
-                    onChange={(e) => setPodThumb(e.target.value)}
-                    className="input w-full pl-10"
-                  />
-                  <FaLink className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                </div>
+                <label className="block text-xs font-bold uppercase text-gray-400 mb-2">Thumbnail Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setPodThumbFile(e.target.files?.[0] || null)}
+                  className="hidden"
+                  id="pod-thumb-upload"
+                />
+                <label
+                  htmlFor="pod-thumb-upload"
+                  className={`flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-2xl cursor-pointer transition-all h-24 ${
+                    podThumbFile
+                      ? "border-blue-400 bg-blue-50 dark:bg-blue-900/10"
+                      : "border-gray-200 dark:border-border hover:border-black dark:hover:border-white"
+                  }`}
+                >
+                  <FaImage className={`text-xl mb-1 ${podThumbFile ? "text-blue-500" : "text-gray-400"}`} />
+                  <span className="text-xs font-bold text-center">
+                    {podThumbFile ? podThumbFile.name : "Select thumbnail (optional)"}
+                  </span>
+                </label>
               </div>
             </div>
 

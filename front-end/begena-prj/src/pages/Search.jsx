@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAudio } from "../context/AudioContext";
 import { FaPlay, FaPause, FaHeart, FaSearch } from "react-icons/fa";
+import { normalizeSongMedia } from "../utils/mediaUrl";
 
 export function Search() {
   const [songs, setSongs] = useState([]);
@@ -24,22 +25,9 @@ export function Search() {
         if (!res.ok) throw new Error("Search failed");
         
         const data = await res.json();
-        const mapped = data.map(song => {
-          let pUrl = song.posterUrl || "/default-poster.jpg";
-          if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-              pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
-          }
-          let aUrl = song.audioUrl || song.url;
-          if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
-              aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
-          }
-          return {
-            ...song,
-            audioUrl: aUrl,
-            posterUrl: pUrl,
-            artist: song.artist || "Unknown Artist"
-          };
-        });
+        const mapped = data.map((song) =>
+          normalizeSongMedia(song, import.meta.env.VITE_API_URL),
+        );
         setSongs(mapped);
       } catch (err) {
         console.error("Search error:", err);

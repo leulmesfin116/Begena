@@ -10,6 +10,20 @@ import {
   FaTimes,
   FaMusic
 } from "react-icons/fa";
+import { normalizeSongMedia } from "../utils/mediaUrl";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+
+async function parseJsonResponse(res) {
+  const text = await res.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error("Server returned invalid data. Check API URL/backend.");
+  }
+}
 
 export function Playlist() {
   const [playlists, setPlaylists] = useState([]);
@@ -32,7 +46,7 @@ export function Playlist() {
         return;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/play`, {
+      const res = await fetch(`${API_BASE_URL}/play`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,12 +56,12 @@ export function Playlist() {
         );
       });
 
+      const data = await parseJsonResponse(res);
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || errData.error || `Server error: ${res.status}`);
+        throw new Error(
+          data.message || data.error || `Server error: ${res.status}`,
+        );
       }
-
-      const data = await res.json();
       
       // Ensure data is an array before setting
       if (Array.isArray(data)) {
@@ -76,7 +90,7 @@ export function Playlist() {
     try {
       setCreating(true);
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/play`, {
+      const res = await fetch(`${API_BASE_URL}/play`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,9 +99,11 @@ export function Playlist() {
         body: JSON.stringify({ name: newPlaylistName }),
       });
 
+      const data = await parseJsonResponse(res);
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || errData.error || "Failed to create playlist");
+        throw new Error(
+          data.message || data.error || "Failed to create playlist",
+        );
       }
 
       setNewPlaylistName("");
@@ -106,16 +122,18 @@ export function Playlist() {
     try {
       setIsDeleting(true);
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/play/${playlistToDelete.id}`, {
+      const res = await fetch(`${API_BASE_URL}/play/${playlistToDelete.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
+      const data = await parseJsonResponse(res);
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || errData.error || "Failed to delete playlist");
+        throw new Error(
+          data.message || data.error || "Failed to delete playlist",
+        );
       }
 
       setPlaylists((prev) => prev.filter((p) => p.id !== playlistToDelete.id));
@@ -132,7 +150,7 @@ export function Playlist() {
     e.stopPropagation();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/play/remove-song`, {
+      const res = await fetch(`${API_BASE_URL}/play/remove-song`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -141,9 +159,9 @@ export function Playlist() {
         body: JSON.stringify({ playlistId, songId }),
       });
 
+      const data = await parseJsonResponse(res);
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.message || errData.error || "Failed to remove song");
+        throw new Error(data.message || data.error || "Failed to remove song");
       }
 
       // Update local state without refetching all playlists
@@ -165,22 +183,9 @@ export function Playlist() {
 
   const getMappedSongs = (playlistSongs) => {
     if (!playlistSongs) return [];
-    return playlistSongs.map((ps) => {
-      let pUrl = ps.song.posterUrl || "/default-poster.jpg";
-      if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-        pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
-      }
-      let aUrl = ps.song.audioUrl || ps.song.url;
-      if (aUrl && !aUrl.startsWith("http") && !aUrl.startsWith("/")) {
-        aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
-      }
-      return {
-        ...ps.song,
-        audioUrl: aUrl,
-        posterUrl: pUrl,
-        artist: ps.song.artist || "Unknown Artist",
-      };
-    });
+    return playlistSongs.map((ps) =>
+      normalizeSongMedia(ps.song, API_BASE_URL),
+    );
   };
 
   const handlePlayPlaylist = (playlist, e) => {

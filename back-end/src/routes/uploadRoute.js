@@ -3,15 +3,15 @@ import upload from "../middleware/uploadMiddleware.js";
 import { prisma } from "../config/db.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { adminMiddleware } from "../middleware/adminMiddleware.js";
-import path from "path";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
 
 const router = express.Router();
 
+// GET all songs
 router.get("/uploads", async (req, res) => {
   try {
     const songs = await prisma.song.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ artist: "asc" }, { title: "asc" }, { createdAt: "desc" }],
     });
     res.json(songs);
   } catch (error) {
@@ -20,10 +20,11 @@ router.get("/uploads", async (req, res) => {
   }
 });
 
+// UPLOAD song (audio + poster)
 router.post(
   "/upload",
-  authMiddleware, // ensure user is logged in
-  adminMiddleware, // ensure user is ADMIN
+  authMiddleware,
+  adminMiddleware,
   upload.fields([
     { name: "audio", maxCount: 1 },
     { name: "poster", maxCount: 1 },
@@ -41,10 +42,11 @@ router.post(
           .json({ error: "Audio file and title are required" });
       }
 
-      const audioUrl = `http://localhost:5000/uploads/${audioFile.filename}`;
+      // Use Cloudinary URLs
+      const audioUrl = audioFile.path; // Cloudinary gives URL in req.files
       const posterUrl = posterFile
-        ? `http://localhost:5000/uploads/${posterFile.filename}`
-        : "https://via.placeholder.com/150"; // Default poster if none provided
+        ? posterFile.path
+        : "https://via.placeholder.com/150"; // Default poster
 
       const newSong = await prisma.song.create({
         data: {
@@ -52,7 +54,7 @@ router.post(
           artist,
           audioUrl,
           posterUrl,
-          createdBy: req.user.id, // store admin ID
+          createdBy: req.user.id,
         },
       });
 
@@ -68,42 +70,53 @@ router.post(
 );
 
 // DELETE song (Admin only)
-router.delete("/upload/:id", authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const song = await prisma.song.findUnique({ where: { id } });
+router.delete(
+  "/upload/:id",
+  authMiddleware,
+  adminMiddleware,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const song = await prisma.song.findUnique({ where: { id } });
 
-    if (!song) {
-      return res.status(404).json({ error: "Song not found" });
-    }
-
-    // Attempt to delete files
-    const deleteFile = (url) => {
-      if (url && url.includes("/uploads/")) {
-        const filename = url.split("/uploads/").pop();
-        const filePath = path.join(process.cwd(), "uploads", filename);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-          console.log(`Deleted file: ${filePath}`);
-        }
+      if (!song) {
+        return res.status(404).json({ error: "Song not found" });
       }
-    };
 
-    deleteFile(song.audioUrl);
-    deleteFile(song.posterUrl);
+      // Delete files from Cloudinary if they exist
+      const deleteCloudinaryFile = async (url) => {
+        if (!url) return;
+        try {
+          // Extract public_id from Cloudinary URL
+          const parts = url.split("/");
+          const filenameWithExt = parts[parts.length - 1];
+          const public_id = filenameWithExt.split(".")[0]; // remove extension
+          await cloudinary.uploader.destroy(public_id, {
+            resource_type: "auto",
+          });
+        } catch (err) {
+          console.warn("Could not delete Cloudinary file:", err.message);
+        }
+      };
 
-    // Delete relations first to avoid constraint issues
-    await prisma.favouriteSong.deleteMany({ where: { songId: id } });
-    await prisma.playlistSong.deleteMany({ where: { songId: id } });
+      await deleteCloudinaryFile(song.audioUrl);
+      await deleteCloudinaryFile(song.posterUrl);
 
-    // Delete from database
-    await prisma.song.delete({ where: { id } });
+      // Delete relations first
+      await prisma.favouriteSong.deleteMany({ where: { songId: id } });
+      await prisma.playlistSong.deleteMany({ where: { songId: id } });
 
-    res.json({ message: "Song and associated files deleted successfully" });
-  } catch (error) {
-    console.error("Delete error:", error);
-    res.status(500).json({ error: "Failed to delete song: " + error.message });
-  }
-});
+      // Delete song record
+      await prisma.song.delete({ where: { id } });
+
+      res.json({ message: "Song and associated files deleted successfully" });
+    } catch (error) {
+      console.error("Delete error:", error);
+      res
+        .status(500)
+        .json({ error: "Failed to delete song: " + error.message });
+    }
+  },
+);
 
 export default router;

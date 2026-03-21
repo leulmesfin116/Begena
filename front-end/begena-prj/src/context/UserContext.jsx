@@ -21,6 +21,7 @@ export function UserProvider({ children }) {
     setIsLoggedIn(true);
     setIsAdmin(role === "ADMIN");
     setUserRole(role);
+    window.dispatchEvent(new Event("auth-changed"));
   };
 
   const logout = () => {
@@ -29,6 +30,7 @@ export function UserProvider({ children }) {
     setIsLoggedIn(false);
     setIsAdmin(false);
     setUserRole(null);
+    window.dispatchEvent(new Event("auth-changed"));
   };
 
   // Sync with other tabs

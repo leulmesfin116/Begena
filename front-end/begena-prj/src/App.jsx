@@ -14,7 +14,7 @@ import { About } from "./pages/About.jsx";
 
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, Search as SearchIcon } from "lucide-react";
 import { useTheme } from "./ThemeContext.jsx";
 import { GlobalPlayer } from "./components/GlobalPlayer.jsx";
 import { useUser } from "./context/UserContext.jsx";
@@ -58,7 +58,7 @@ function App() {
                 BEGENA
               </Link>
             </div>
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden lg:flex items-center space-x-2 xl:space-x-4">
               <Link className="nav" to="/">
                 Home
               </Link>
@@ -82,7 +82,7 @@ function App() {
                 </>
               )}
             </div>
-            <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+            <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-3">
               <button
                 onClick={toggleTheme}
                 aria-label={
@@ -98,15 +98,19 @@ function App() {
                 )}
               </button>
 
-              <div className="relative">
+              <div className="relative hidden sm:block">
                 {/* on change */}
+                <SearchIcon
+                  size={14}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500"
+                />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={handleSearch}
-                  placeholder="    search songs"
-                  className="pl-8 pr-2 py-1 sm:pl-10 sm:pr-4 sm:py-2 border-2 rounded-md input w-24 sm:w-48 md:w-64 text-xs sm:text-sm md:text-base outline-none focus:border-black dark:focus:border-white transition-colors"
+                  placeholder="Search songs"
+                  className="pl-7 pr-2 py-1 sm:pl-9 sm:pr-3 sm:py-2 border-2 rounded-md input w-32 md:w-52 lg:w-64 text-xs sm:text-sm outline-none focus:border-black dark:focus:border-white transition-colors"
                 />
               </div>
 
@@ -116,7 +120,7 @@ function App() {
                   onClick={handleUserIcon}
                   className="p-1 rounded-full bg-gray-200 dark:bg-gray-700 text-black dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                 >
-                  <FaUserCircle className="w-6 h-6" />
+                  <FaUserCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-card shadow-lg rounded-md z-10 border dark:border-border">
@@ -141,7 +145,7 @@ function App() {
 
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-secondary text-black dark:text-white hover:bg-gray-300 dark:hover:bg-accent transition-colors"
+                className="lg:hidden p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-secondary text-black dark:text-white hover:bg-gray-300 dark:hover:bg-accent transition-colors"
               >
                 {isMenuOpen ? (
                   <X size={16} className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -152,7 +156,7 @@ function App() {
             </div>
           </div>
           {isMenuOpen && (
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-background border-t border-gray-200 dark:border-border">
                 <Link
                   className="nav block px-3 py-2"

@@ -25,11 +25,18 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
 ];
 
+const isLocalDevOrigin = (origin) => {
+  if (typeof origin !== "string") return false;
+  return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+};
+
 app.use(
   cors({
     origin(origin, callback) {
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (allowedOrigins.includes(origin) || isLocalDevOrigin(origin)) {
+        return callback(null, true);
+      }
       return callback(new Error(`CORS blocked for origin: ${origin}`));
     },
     credentials: true,
@@ -50,6 +57,25 @@ app.use("/play", playlistRoute);
 app.use("/api", uploadRoute);
 app.use("/api/podcasts", podcastRoute);
 app.use("/api/lofi", lofiUpload);
+
+// 404 handler (always JSON so clients can safely parse)
+app.use((req, res) => {
+  res.status(404).json({ message: "Not found" });
+});
+
+// Error handler (always JSON so clients can safely parse)
+app.use((err, req, res, next) => {
+  const message = err?.message || "Internal Server Error";
+  const status =
+    err?.status ||
+    (typeof message === "string" && message.startsWith("CORS blocked")
+      ? 403
+      : 500);
+
+  console.error("Error:", err);
+  if (res.headersSent) return next(err);
+  res.status(status).json({ message });
+});
 
 const PORT = 5000;
 

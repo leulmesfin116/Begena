@@ -1,0 +1,71 @@
+﻿node : file:///C:/Use
+rs/danme/Begena-web%2
+0app/back-end/src/mid
+dleware/uploadMiddlew
+are.js:2
+At line:1 char:1
++ node src/server.js 
+2>&1 | Out-File 
+-FilePath error.txt 
+-Encoding utf8
++ ~~~~~~~~~~~~~~~~~~~
+~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (file://   
+ /C:/User...Middl    
+eware.js:2:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+import { 
+CloudinaryStorage } 
+from "multer-storage-
+cloudinary";
+         
+^^^^^^^^^^^^^^^^^
+SyntaxError: Named 
+export 
+'CloudinaryStorage' 
+not found. The 
+requested module 'mul
+ter-storage-cloudinar
+y' is a CommonJS 
+module, which may 
+not support all 
+module.exports as 
+named exports.
+CommonJS modules can 
+always be imported 
+via the default 
+export, for example 
+using:
+
+import pkg from 'mult
+er-storage-cloudinary
+';
+const { 
+CloudinaryStorage } 
+= pkg;
+
+    at ModuleJob._ins
+tantiate (node:intern
+al/modules/esm/module
+_job:213:21)
+    at async 
+ModuleJob.run (node:i
+nternal/modules/esm/m
+odule_job:320:5)
+    at async 
+ModuleLoader.import (
+node:internal/modules
+/esm/loader:606:24)
+    at async asyncRun
+EntryPointWithESMLoad
+er (node:internal/mod
+ules/run_main:117:5)
+
+Node.js v20.20.0

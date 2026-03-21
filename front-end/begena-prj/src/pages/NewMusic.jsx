@@ -3,6 +3,10 @@ import { useLocation } from "react-router-dom";
 import { useAudio } from "../context/AudioContext";
 import { useUser } from "../context/UserContext";
 import { FaPlay, FaPause, FaHeart, FaPlus, FaTrash } from "react-icons/fa";
+import { normalizeSongMedia } from "../utils/mediaUrl";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 export function NewMusic() {
   const [songs, setSongs] = useState([]);
@@ -25,13 +29,24 @@ export function NewMusic() {
         const token = localStorage.getItem("token");
 
         // Fetch songs
-        const songsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads`).catch(
+        const songsRes = await fetch(`${API_BASE_URL}/api/uploads`).catch(
           (err) => {
             throw new Error("Network error: Could not connect to server.");
           },
         );
+
+        const songsText = await songsRes.text();
+        let songsData = [];
+        try {
+          songsData = songsText ? JSON.parse(songsText) : [];
+        } catch {
+          throw new Error(
+            "Server returned invalid data. Check VITE_API_URL or backend endpoint.",
+          );
+        }
+
         if (!songsRes.ok) {
-          const errData = await songsRes.json().catch(() => ({}));
+          const errData = songsData && typeof songsData === "object" ? songsData : {};
           throw new Error(
             errData.message ||
               errData.error ||
@@ -39,27 +54,14 @@ export function NewMusic() {
           );
         }
 
-        const songsData = await songsRes.json();
         const mappedSongs = songsData
           .filter((song) => song !== null)
-          .map((song) => {
-            let pUrl = song.posterUrl || "/default-poster.jpg";
-            if (pUrl && !pUrl.startsWith("http") && !pUrl.startsWith("/")) {
-              pUrl = `${import.meta.env.VITE_API_URL}/uploads/${pUrl}`;
-aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
-            }
-            return {
-              ...song,
-              audioUrl: aUrl,
-              posterUrl: pUrl,
-              artist: song.artist || "Unknown Artist",
-            };
-          });
+          .map((song) => normalizeSongMedia(song, API_BASE_URL));
         setSongs(mappedSongs);
 
         // Fetch playlists if logged in
         if (token) {
-          const playRes = await fetch(`${import.meta.env.VITE_API_URL}/play`, {
+          const playRes = await fetch(`${API_BASE_URL}/play`, {
             headers: { Authorization: `Bearer ${token}` },
           }).catch(() => null);
 
@@ -95,7 +97,7 @@ aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
         return;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/play/add-song`, {
+      const res = await fetch(`${API_BASE_URL}/play/add-song`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +128,7 @@ aUrl = `${import.meta.env.VITE_API_URL}/uploads/${aUrl}`;
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/${songId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/upload/${songId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

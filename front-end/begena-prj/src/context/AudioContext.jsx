@@ -8,6 +8,8 @@ import React, {
 } from "react";
 
 const AudioContext = createContext();
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 
 export function useAudio() {
   return useContext(AudioContext);
@@ -33,7 +35,7 @@ export function AudioProvider({ children }) {
         return;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/fav`, {
+      const res = await fetch(`${API_BASE_URL}/fav`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +57,11 @@ export function AudioProvider({ children }) {
   useEffect(() => {
     fetchLikes();
     window.addEventListener("focus", fetchLikes);
-    return () => window.removeEventListener("focus", fetchLikes);
+    window.addEventListener("auth-changed", fetchLikes);
+    return () => {
+      window.removeEventListener("focus", fetchLikes);
+      window.removeEventListener("auth-changed", fetchLikes);
+    };
   }, [fetchLikes]);
 
   useEffect(() => {
@@ -106,9 +112,10 @@ export function AudioProvider({ children }) {
       const token = localStorage.getItem("token");
       if (!token) {
         window.location.href = "/login";
+        return;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/fav/addtoFav`, {
+      const res = await fetch(`${API_BASE_URL}/fav/addtoFav`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,6 +135,9 @@ export function AudioProvider({ children }) {
           }
           return newSet;
         });
+      } else {
+        const data = await res.json().catch(() => ({}));
+        console.error("Like API failed:", data.message || data.error || res.status);
       }
     } catch (err) {
       console.error("Error toggling like:", err);
