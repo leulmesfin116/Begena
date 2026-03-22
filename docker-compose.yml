@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   backend:
     build:
@@ -7,9 +9,6 @@ services:
       - "5000:5000"
     env_file:
       - ./back-end/.env
-    # If Postgres runs on your PC (not in Compose), use host.docker.internal in DATABASE_URL inside .env
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - ./back-end/uploads:/app/uploads
       - ./back-end/public/lofi:/app/public/lofi
@@ -18,11 +17,11 @@ services:
   frontend:
     build:
       context: ./front-end/begena-prj
+      dockerfile: Dockerfile
     ports:
-      # Must match vite.config.js server.port (5173)
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - VITE_API_URL=http://backend:5000 # Must match backend service name
     depends_on:
       - backend
     volumes:
