@@ -5,8 +5,8 @@ RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files + .npmrc (legacy-peer-deps for cloudinary vs multer-storage-cloudinary peers)
+COPY package*.json .npmrc ./
 
 # Install dependencies
 # Note: We need prisma CLI to generate the client

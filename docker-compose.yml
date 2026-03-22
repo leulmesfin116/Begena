@@ -1,12 +1,17 @@
+# Browser runs on your machine — API URL must be reachable from the host, not the Docker service name.
+# Use localhost + published backend port. (http://backend:5000 only works between containers, not in fetch() from the browser.)
 services:
   backend:
     build:
       context: ./back-end
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     env_file:
       - ./back-end/.env
+    # If Postgres runs on your PC (not in Compose), use host.docker.internal in DATABASE_URL inside .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./back-end/uploads:/app/uploads
       - ./back-end/public/lofi:/app/public/lofi
@@ -16,9 +21,12 @@ services:
     build:
       context: ./front-end/begena-prj
     ports:
+      # Must match vite.config.js server.port (5173)
       - "5173:5173"
     environment:
       - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - backend
     volumes:
       - ./front-end/begena-prj:/app
       - /app/node_modules
