@@ -1,5 +1,3 @@
-# Browser runs on your machine — API URL must be reachable from the host, not the Docker service name.
-# Use localhost + published backend port. (http://backend:5000 only works between containers, not in fetch() from the browser.)
 services:
   backend:
     build:
