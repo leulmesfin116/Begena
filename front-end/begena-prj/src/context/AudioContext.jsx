@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AudioContext = createContext();
 const API_BASE_URL =
@@ -16,6 +17,7 @@ export function useAudio() {
 }
 
 export function AudioProvider({ children }) {
+  const navigate = useNavigate();
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playlist, setPlaylist] = useState([]);
@@ -111,7 +113,7 @@ export function AudioProvider({ children }) {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        window.location.href = "/login";
+        navigate("/Login");
         return;
       }
 
