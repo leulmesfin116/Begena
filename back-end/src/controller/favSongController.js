@@ -18,7 +18,6 @@ const addtoFav = async (req, res) => {
     });
 
     if (songExist) {
-      // Remove if exists (Toggle)
       await prisma.favouriteSong.delete({
         where: {
           userId_songId: {
@@ -27,16 +26,21 @@ const addtoFav = async (req, res) => {
           },
         },
       });
-      return res.status(200).json({ message: "Song removed from favourites", removed: true });
+      return res
+        .status(200)
+        .json({ message: "Song removed from favourites", removed: true });
     }
 
-    // Add if not exists
     await prisma.favouriteSong.create({
       data: { userId, songId },
     });
-    res.status(201).json({ message: "Song added to the favourite", removed: false });
+    res
+      .status(201)
+      .json({ message: "Song added to the favourite", removed: false });
   } catch (err) {
-    res.status(500).json({ message: "Something went wrong", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: err.message });
   }
 };
 const getFavorites = async (req, res) => {
@@ -45,18 +49,19 @@ const getFavorites = async (req, res) => {
     const favorites = await prisma.favouriteSong.findMany({
       where: { userId },
       include: {
-        favsong: true, // Fetch the related song data
+        favsong: true,
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
-    
-    // Map to just the song objects for easier frontend use
+
     const songs = favorites
       .map((fav) => fav.favsong)
       .filter((song) => song !== null);
     res.status(200).json(songs);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch favorites", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch favorites", error: err.message });
   }
 };
 

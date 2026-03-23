@@ -16,7 +16,6 @@ connectDB();
 
 const app = express();
 
-// Build allowed origins from env var (comma-separated) + localhost defaults
 const envOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
   : [];
@@ -64,12 +63,10 @@ app.use("/api", uploadRoute);
 app.use("/api/podcasts", podcastRoute);
 app.use("/api/lofi", lofiUpload);
 
-// 404 handler (always JSON so clients can safely parse)
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
 });
 
-// Error handler (always JSON so clients can safely parse)
 app.use((err, req, res, next) => {
   const message = err?.message || "Internal Server Error";
   const status =

@@ -16,10 +16,9 @@ export const uploadLofi = async (req, res) => {
       posterUrl = files.poster[0].path;
     }
 
-    // Save track to DB as a regular Song with "lofi" genre
     const track = await prisma.song.create({
-      data: { 
-        title: title || "Untitled Lofi", 
+      data: {
+        title: title || "Untitled Lofi",
         artist: "Lofi Community",
         audioUrl,
         posterUrl,
@@ -40,8 +39,8 @@ export const getLofiTracks = async (req, res) => {
     const tracks = await prisma.song.findMany({
       where: {
         genres: {
-          has: "lofi"
-        }
+          has: "lofi",
+        },
       },
       orderBy: { createdAt: "desc" },
     });

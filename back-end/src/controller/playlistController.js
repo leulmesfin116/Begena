@@ -64,10 +64,10 @@ const addSongToPlaylist = async (req, res) => {
     });
 
     await prisma.playlistSong.create({
-      data: { 
-        playlistId, 
+      data: {
+        playlistId,
         songId,
-        order: count + 1
+        order: count + 1,
       },
     });
 
@@ -96,10 +96,9 @@ const getUserPlaylists = async (req, res) => {
       },
     });
 
-    // Map `playlist` to `songs` so frontend can read it correctly
-    const formattedPlaylists = playlists.map(p => ({
+    const formattedPlaylists = playlists.map((p) => ({
       ...p,
-      songs: p.playlist
+      songs: p.playlist,
     }));
 
     res.status(200).json(formattedPlaylists);
@@ -134,7 +133,7 @@ const getSinglePlaylist = async (req, res) => {
 
     const formattedPlaylist = {
       ...playlist,
-      songs: playlist.playlist
+      songs: playlist.playlist,
     };
 
     res.status(200).json(formattedPlaylist);

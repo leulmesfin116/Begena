@@ -42,11 +42,10 @@ router.post(
           .json({ error: "Audio file and title are required" });
       }
 
-      // Use Cloudinary URLs
-      const audioUrl = audioFile.path; // Cloudinary gives URL in req.files
+      const audioUrl = audioFile.path;
       const posterUrl = posterFile
         ? posterFile.path
-        : "https://via.placeholder.com/150"; // Default poster
+        : "https://via.placeholder.com/150";
 
       const newSong = await prisma.song.create({
         data: {
@@ -87,10 +86,9 @@ router.delete(
       const deleteCloudinaryFile = async (url) => {
         if (!url) return;
         try {
-          // Extract public_id from Cloudinary URL
           const parts = url.split("/");
           const filenameWithExt = parts[parts.length - 1];
-          const public_id = filenameWithExt.split(".")[0]; // remove extension
+          const public_id = filenameWithExt.split(".")[0];
           await cloudinary.uploader.destroy(public_id, {
             resource_type: "auto",
           });

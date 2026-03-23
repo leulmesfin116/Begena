@@ -4,7 +4,7 @@ import path from "path";
 // Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // folder where files are saved
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// File type validation
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("audio/")) {
     cb(null, true);
@@ -22,7 +21,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// File size limit (10MB)
 const limits = { fileSize: 10 * 1024 * 1024 };
 
 const upload = multer({ storage, fileFilter, limits });
