@@ -6,10 +6,10 @@ RUN apk add --no-cache openssl
 WORKDIR /app
 
 # Copy package files
-COPY package.json .
+COPY package.json package-lock.json ./
 
-# Install all dependencies (including devDependencies for prisma CLI)
-RUN npm install
+# Install dependencies with legacy-peer-deps for multer / multer-storage-cloudinary compatibility
+RUN npm ci --legacy-peer-deps
 
 # Copy prisma schema
 COPY prisma ./prisma/
@@ -22,5 +22,4 @@ COPY . .
 
 EXPOSE 5000
 
-# Start the server
 CMD ["node", "src/server.js"]
