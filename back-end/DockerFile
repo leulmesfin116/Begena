@@ -5,11 +5,10 @@ RUN apk add --no-cache openssl
 
 WORKDIR /app
 
-# Copy package files + .npmrc (legacy-peer-deps for cloudinary vs multer-storage-cloudinary peers)
-COPY package*.json .npmrc ./
+# Copy package files
+COPY package.json .
 
-# Install dependencies
-# Note: We need prisma CLI to generate the client
+# Install all dependencies (including devDependencies for prisma CLI)
 RUN npm install
 
 # Copy prisma schema
@@ -23,5 +22,5 @@ COPY . .
 
 EXPOSE 5000
 
-# Correct entry point
+# Start the server
 CMD ["node", "src/server.js"]

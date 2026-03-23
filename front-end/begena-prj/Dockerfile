@@ -1,17 +1,29 @@
+# Stage 1: Build the app
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
+
+# Build arg so Vite can bake in the API URL at build time
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+RUN npm run build
+
+# Stage 2: Serve with a lightweight static server
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+RUN npm install -g serve
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+COPY --from=build /app/dist ./dist
 
-# Copy application code
-COPY . .
+EXPOSE 10000
 
-EXPOSE 5173
-
-# Run Vite in development mode, allowing external access
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["serve", "-s", "dist", "-l", "10000"]

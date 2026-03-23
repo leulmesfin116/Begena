@@ -1,0 +1,28 @@
+services:
+  # Backend API
+  - type: web
+    name: begena-backend
+    runtime: docker
+    dockerfilePath: ./back-end/Dockerfile
+    dockerContext: ./back-end
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  # Frontend
+  - type: web
+    name: begena-frontend
+    runtime: docker
+    dockerfilePath: ./front-end/begena-prj/Dockerfile
+    dockerContext: ./front-end/begena-prj
+    envVars:
+      - key: VITE_API_URL
+        sync: false
