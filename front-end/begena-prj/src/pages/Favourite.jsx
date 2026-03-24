@@ -72,7 +72,11 @@ export function Favourite() {
       </div>
 
       {loading && <div className="flex justify-center my-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black dark:border-white"></div></div>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+      {error && (
+        <div className="text-center p-4 bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-lg mb-8 max-w-xl mx-auto border border-gray-200 dark:border-gray-700">
+          {error}
+        </div>
+      )}
       {!loading && !error && songs.length === 0 && (
         <p className="text-center text-gray-500">
           You haven't liked any songs yet.
