@@ -9,23 +9,32 @@ export function Signup() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useUser();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // ensure email contains a domain — if user omitted '@', append @gmail.com
-    let finalEmail = email || "";
-    if (finalEmail && !finalEmail.includes("@")) {
-      finalEmail = finalEmail + "@gmail.com";
-    }
-    const data = await signupUser(name, finalEmail, password);
+    setIsLoading(true);
+    setMessage(""); // clear previous messages
+    try {
+      // ensure email contains a domain — if user omitted '@', append @gmail.com
+      let finalEmail = email || "";
+      if (finalEmail && !finalEmail.includes("@")) {
+        finalEmail = finalEmail + "@gmail.com";
+      }
+      const data = await signupUser(name, finalEmail, password);
 
-    if (data.token) {
-      login(data.token, data.role || "USER");
-      navigate("/");
-    } else {
-      setMessage("Signup failed: " + data.message);
+      if (data.token) {
+        login(data.token, data.role || "USER");
+        navigate("/");
+      } else {
+        setMessage("Signup failed: " + data.message);
+      }
+    } catch (error) {
+      setMessage("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,11 +81,16 @@ export function Signup() {
 
         <button
           type="submit"
-          className="relative bg-gray-300 dark:bg-muted rounded-lg p-3 border-2 border-black dark:border-white overflow-hidden group cursor-pointer w-full"
+          disabled={isLoading}
+          className={`relative bg-gray-300 dark:bg-muted rounded-lg p-3 border-2 border-black dark:border-white overflow-hidden group w-full ${
+            isLoading ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+          }`}
         >
-          <span className="absolute inset-0 bg-black dark:bg-white translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-550 z-0"></span>
+          {!isLoading && (
+            <span className="absolute inset-0 bg-black dark:bg-white translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-550 z-0"></span>
+          )}
           <span className="relative z-10 group-hover:text-white dark:group-hover:text-background transition-colors duration-400">
-            submit
+            {isLoading ? "Signing up..." : "submit"}
           </span>
         </button>
 

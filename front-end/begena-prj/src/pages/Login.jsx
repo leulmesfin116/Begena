@@ -9,20 +9,29 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { refreshLikes } = useAudio();
   const { login } = useUser();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const data = await loginUser(email, password);
+    setIsLoading(true);
+    setMessage(""); // clear previous message
+    try {
+      const data = await loginUser(email, password);
 
-    if (data.token) {
-      login(data.token, data.role);
-      await refreshLikes(); // Load user's favorites immediately
-      navigate("/");
-    } else {
-      setMessage("Login failed: " + data.message);
+      if (data.token) {
+        login(data.token, data.role);
+        await refreshLikes(); // Load user's favorites immediately
+        navigate("/");
+      } else {
+        setMessage("Login failed: " + data.message);
+      }
+    } catch (error) {
+      setMessage("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,19 +64,28 @@ export function Login() {
         />
         <button
           type="submit"
-          className="relative bg-gray-300 dark:bg-muted rounded-lg p-3 border-2 border-black dark:border-white
-          overflow-hidden group cursor-pointer w-full"
+          disabled={isLoading}
+          className={`relative bg-gray-300 dark:bg-muted rounded-lg p-3 border-2 border-black dark:border-white
+          overflow-hidden group w-full ${
+            isLoading ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+          }`}
         >
-          <span
-            className="absolute inset-0 bg-black dark:bg-white translate-y-[-100%]
-             group-hover:translate-y-0 transition-transform duration-550 z-0"
-          ></span>
+          {!isLoading && (
+            <span
+              className="absolute inset-0 bg-black dark:bg-white translate-y-[-100%]
+               group-hover:translate-y-0 transition-transform duration-550 z-0"
+            ></span>
+          )}
           <span className="relative z-10 group-hover:text-white dark:group-hover:text-background transition-colors duration-400">
-            submit
+            {isLoading ? "Logging in..." : "submit"}
           </span>
         </button>
 
-        <p className="text-center text-sm break-words">{message}</p>
+        {message && (
+          <p className="text-center text-sm text-red-600 break-words">
+            {message}
+          </p>
+        )}
 
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-center text-sm sm:text-base">
           <p>Need an account?</p>
