@@ -12,9 +12,22 @@ import { Upload } from "./pages/Upload.jsx";
 import { AdminUploads } from "./pages/AdminUploads.jsx";
 import { About } from "./pages/About.jsx";
 
-import { Link, Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import { ArrowLeft, Moon, Sun, Menu, X, Search as SearchIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  Moon,
+  Sun,
+  Menu,
+  X,
+  Search as SearchIcon,
+} from "lucide-react";
 import { useTheme } from "./ThemeContext.jsx";
 import { GlobalPlayer } from "./components/GlobalPlayer.jsx";
 import { useUser } from "./context/UserContext.jsx";
@@ -55,7 +68,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              {location.pathname !== '/' && (
+              {location.pathname !== "/" && (
                 <button
                   onClick={() => navigate(-1)}
                   className="mr-2 sm:mr-4 p-1 sm:p-2 rounded-md bg-gray-200 dark:bg-secondary text-black dark:text-white hover:bg-gray-300 dark:hover:bg-accent transition-colors flex items-center justify-center"
@@ -84,10 +97,16 @@ function App() {
               </Link>
               {isAdmin && (
                 <>
-                  <Link className="nav font-bold text-gray-900 dark:text-gray-200" to="/upload">
+                  <Link
+                    className="nav font-bold text-gray-900 dark:text-gray-200"
+                    to="/upload"
+                  >
                     Music
                   </Link>
-                  <Link className="nav font-bold text-gray-900 dark:text-gray-200" to="/admin/uploads">
+                  <Link
+                    className="nav font-bold text-gray-900 dark:text-gray-200"
+                    to="/admin/uploads"
+                  >
                     Pod/Lofi
                   </Link>
                 </>
@@ -120,7 +139,7 @@ function App() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={handleSearch}
-                  placeholder="Search songs"
+                  placeholder="    Search songs"
                   className="pl-7 pr-2 py-1 sm:pl-9 sm:pr-3 sm:py-2 border-2 rounded-md input w-32 md:w-52 lg:w-64 text-xs sm:text-sm outline-none focus:border-black dark:focus:border-white transition-colors"
                 />
               </div>
