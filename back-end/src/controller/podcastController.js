@@ -1,10 +1,21 @@
 import { prisma } from "../config/db.js";
 
 const Podcast = async (req, res) => {
-  const podcasts = await prisma.podcast.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-  res.json(podcasts);
+  try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit) || 10);
+    const skip = (page - 1) * limit;
+
+    const podcasts = await prisma.podcast.findMany({
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    });
+    res.json(podcasts);
+  } catch (error) {
+    console.error("Podcast fetch error:", error);
+    res.status(500).json({ error: "Failed to fetch podcasts" });
+  }
 };
 
 export const uploadPodcast = async (req, res) => {

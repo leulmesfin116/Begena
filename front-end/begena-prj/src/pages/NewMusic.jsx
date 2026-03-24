@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useAudio } from "../context/AudioContext";
 import { useUser } from "../context/UserContext";
@@ -7,11 +7,15 @@ import { normalizeSongMedia } from "../utils/mediaUrl";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+const SONGS_PER_PAGE = 10;
 
 export function NewMusic() {
   const [songs, setSongs] = useState([]);
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState("");
   const [openPlaylistMenuId, setOpenPlaylistMenuId] = useState(null);
   const [toastMsg, setToastMsg] = useState("");
@@ -22,44 +26,26 @@ export function NewMusic() {
   const { playSong, currentSong, isPlaying, likedSongs, toggleLike } =
     useAudio();
   const { isAdmin } = useUser();
+  const observer = useRef();
+  
+  const lastSongRef = useCallback(
+    (node) => {
+      if (loading || fetchingMore) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, fetchingMore, hasMore],
+  );
 
   useEffect(() => {
-    const fetchSongsAndPlaylists = async () => {
+    const fetchPlaylists = async () => {
       try {
         const token = localStorage.getItem("token");
-
-        // Fetch songs
-        const songsRes = await fetch(`${API_BASE_URL}/api/uploads`).catch(
-          (err) => {
-            throw new Error("Network error: Could not connect to server.");
-          },
-        );
-
-        const songsText = await songsRes.text();
-        let songsData = [];
-        try {
-          songsData = songsText ? JSON.parse(songsText) : [];
-        } catch {
-          throw new Error(
-            "Server returned invalid data. Check VITE_API_URL or backend endpoint.",
-          );
-        }
-
-        if (!songsRes.ok) {
-          const errData = songsData && typeof songsData === "object" ? songsData : {};
-          throw new Error(
-            errData.message ||
-              errData.error ||
-              `Server error: ${songsRes.status}`,
-          );
-        }
-
-        const mappedSongs = songsData
-          .filter((song) => song !== null)
-          .map((song) => normalizeSongMedia(song, API_BASE_URL));
-        setSongs(mappedSongs);
-
-        // Fetch playlists if logged in
         if (token) {
           const playRes = await fetch(`${API_BASE_URL}/play`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -73,15 +59,64 @@ export function NewMusic() {
           }
         }
       } catch (err) {
-        console.error("NewMusic fetch error:", err);
+        console.error("NewMusic playlists fetch error:", err);
+      }
+    };
+    fetchPlaylists();
+  }, []);
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        if (page === 1) setLoading(true);
+        else setFetchingMore(true);
+
+        const songsRes = await fetch(
+          `${API_BASE_URL}/api/uploads?page=${page}&limit=${SONGS_PER_PAGE}`,
+        ).catch((err) => {
+          throw new Error("Network error: Could not connect to server.");
+        });
+
+        const songsText = await songsRes.text();
+        let songsData = [];
+        try {
+          songsData = songsText ? JSON.parse(songsText) : [];
+        } catch {
+          throw new Error(
+            "Server returned invalid data. Check VITE_API_URL or backend endpoint.",
+          );
+        }
+
+        if (!songsRes.ok) {
+          const errData =
+            songsData && typeof songsData === "object" ? songsData : {};
+          throw new Error(
+            errData.message ||
+              errData.error ||
+              `Server error: ${songsRes.status}`,
+          );
+        }
+
+        if (songsData.length < SONGS_PER_PAGE) {
+          setHasMore(false);
+        }
+
+        const mappedSongs = songsData
+          .filter((song) => song !== null)
+          .map((song) => normalizeSongMedia(song, API_BASE_URL));
+
+        setSongs((prev) => (page === 1 ? mappedSongs : [...prev, ...mappedSongs]));
+      } catch (err) {
+        console.error("NewMusic songs fetch error:", err);
         setError(err.message);
       } finally {
         setLoading(false);
+        setFetchingMore(false);
       }
     };
 
-    fetchSongsAndPlaylists();
-  }, []);
+    fetchSongs();
+  }, [page]);
 
   useEffect(() => {
     const handleClickOutside = () => setOpenPlaylistMenuId(null);
@@ -210,9 +245,10 @@ export function NewMusic() {
       )}
 
       <div className="flex flex-col gap-4">
-        {songs.map((song) => (
+        {songs.map((song, index) => (
           <div
             key={song.id}
+            ref={songs.length === index + 1 ? lastSongRef : null}
             className="group flex items-center bg-white dark:bg-card shadow-sm hover:shadow-md border border-gray-100 dark:border-border rounded-xl p-2.5 sm:p-3 gap-3 sm:gap-4 transition-all"
           >
             {/* Poster */}
@@ -344,6 +380,20 @@ export function NewMusic() {
           </div>
         ))}
       </div>
+
+      {/* Loading More Indicator */}
+      {fetchingMore && (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black dark:border-white"></div>
+        </div>
+      )}
+
+      {/* End of results message */}
+      {!hasMore && songs.length > 0 && (
+        <p className="text-center text-gray-500 mt-8 mb-4 text-sm font-medium italic">
+          You've reached the end of the releases.
+        </p>
+      )}
     </div>
   );
 }

@@ -7,12 +7,19 @@ import { v2 as cloudinary } from "cloudinary";
 
 const router = express.Router();
 
-// GET all songs
+// GET songs with pagination
 router.get("/uploads", async (req, res) => {
   try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit) || 10);
+    const skip = (page - 1) * limit;
+
     const songs = await prisma.song.findMany({
       orderBy: [{ artist: "asc" }, { title: "asc" }, { createdAt: "desc" }],
+      skip,
+      take: limit,
     });
+
     res.json(songs);
   } catch (error) {
     console.error("Error fetching songs:", error);

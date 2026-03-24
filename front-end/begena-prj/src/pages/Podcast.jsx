@@ -1,53 +1,76 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { FaTrash } from "react-icons/fa";
 import { useUser } from "../context/UserContext";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+const PODCASTS_PER_PAGE = 6;
 
 export function Podcast() {
   const [podcasts, setPodcasts] = useState([]);
   const [playingVideoId, setPlayingVideoId] = useState(null);
   const { isAdmin } = useUser();
   const [loading, setLoading] = useState(true);
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState("");
   const [podcastToDelete, setPodcastToDelete] = useState(null);
 
-  useEffect(() => {
-    fetchPodcasts();
-  }, []);
+  const observer = useRef();
+  const lastPodcastRef = useCallback(
+    (node) => {
+      if (loading || fetchingMore) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, fetchingMore, hasMore],
+  );
 
-  const fetchPodcasts = () => {
-    setLoading(true);
-    fetch(`${API_BASE_URL}/api/podcasts`)
-      .then((res) => {
-        return res.text().then((text) => {
-          let data = [];
-          try {
-            data = text ? JSON.parse(text) : [];
-          } catch {
-            throw new Error(
-              "Server returned invalid data. Check API URL/backend.",
-            );
-          }
-          if (!res.ok) {
-            const msg =
-              data?.message || data?.error || `Server error: ${res.status}`;
-            throw new Error(msg);
-          }
-          return data;
-        });
-      })
-      .then((data) => {
-        setPodcasts(data);
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        if (page === 1) setLoading(true);
+        else setFetchingMore(true);
+
+        const res = await fetch(
+          `${API_BASE_URL}/api/podcasts?page=${page}&limit=${PODCASTS_PER_PAGE}`,
+        );
+        const text = await res.text();
+        let data = [];
+        try {
+          data = text ? JSON.parse(text) : [];
+        } catch {
+          throw new Error("Server returned invalid data. Check API URL/backend.");
+        }
+
+        if (!res.ok) {
+          const msg = data?.message || data?.error || `Server error: ${res.status}`;
+          throw new Error(msg);
+        }
+
+        if (data.length < PODCASTS_PER_PAGE) {
+          setHasMore(false);
+        }
+
+        setPodcasts((prev) => (page === 1 ? data : [...prev, ...data]));
         setError("");
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Podcast fetch error:", err);
         setError(err.message || "Failed to load podcasts.");
-      })
-      .finally(() => setLoading(false));
-  };
+      } finally {
+        setLoading(false);
+        setFetchingMore(false);
+      }
+    };
+
+    fetchPodcasts();
+  }, [page]);
 
   const handleDeleteClick = (p) => {
     setPodcastToDelete(p);
@@ -99,9 +122,10 @@ export function Podcast() {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
-        {podcasts.map((p) => (
+        {podcasts.map((p, index) => (
           <div
             key={p.id}
+            ref={podcasts.length === index + 1 ? lastPodcastRef : null}
             className="bg-white dark:bg-card rounded-2xl shadow-lg overflow-hidden transition-all hover:shadow-xl"
           >
             <div className="relative aspect-video">
@@ -158,6 +182,20 @@ export function Podcast() {
           </div>
         ))}
       </div>
+
+      {/* Loading More Indicator */}
+      {fetchingMore && (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black dark:border-white"></div>
+        </div>
+      )}
+
+      {/* End of results message */}
+      {!hasMore && podcasts.length > 0 && (
+        <p className="text-center text-gray-500 mt-8 mb-4 text-sm font-medium italic">
+          You've reached the end of the podcasts.
+        </p>
+      )}
 
       {/* Custom Delete Confirmation Modal */}
       {podcastToDelete && (

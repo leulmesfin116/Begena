@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAudio } from "../context/AudioContext";
 import { FaPlay, FaPause, FaHeart, FaTrash } from "react-icons/fa";
@@ -7,35 +7,64 @@ import { normalizeSongMedia } from "../utils/mediaUrl";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+const SONGS_PER_PAGE = 10;
 
 export function LofiMusic() {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState("");
   const [songToDelete, setSongToDelete] = useState(null);
 
   const { playSong, currentSong, isPlaying, likedSongs, toggleLike } = useAudio();
   const { isAdmin } = useUser();
+  const observer = useRef();
+  
+  const lastSongRef = useCallback(
+    (node) => {
+      if (loading || fetchingMore) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, fetchingMore, hasMore],
+  );
 
   const fetchLofi = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/lofi`);
+      if (page === 1) setLoading(true);
+      else setFetchingMore(true);
+
+      const res = await fetch(`${API_BASE_URL}/api/lofi?page=${page}&limit=${SONGS_PER_PAGE}`);
       if (!res.ok) throw new Error("Failed to fetch lofi music");
       const data = await res.json();
+      
+      if (data.length < SONGS_PER_PAGE) {
+        setHasMore(false);
+      }
+
       const mapped = (Array.isArray(data) ? data : []).map((song) =>
         normalizeSongMedia(song, API_BASE_URL),
       );
-      setSongs(mapped);
+
+      setSongs((prev) => (page === 1 ? mapped : [...prev, ...mapped]));
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
+      setFetchingMore(false);
     }
   };
 
   useEffect(() => {
     fetchLofi();
-  }, []);
+  }, [page]);
 
   const handleDeleteClick = (song) => {
     setSongToDelete(song);
@@ -92,13 +121,14 @@ export function LofiMusic() {
                 <p className="text-gray-500">No lofi tracks uploaded yet.</p>
             </div>
         ) : (
-            songs.map((song) => {
+            songs.map((song, index) => {
                 const isCurrent = currentSong?.id === song.id;
                 const active = isCurrent && isPlaying;
 
                 return (
                     <motion.div
                         key={song.id}
+                        ref={songs.length === index + 1 ? lastSongRef : null}
                         initial={false}
                         animate={active ? { 
                             scale: 1.02, 
@@ -185,6 +215,21 @@ export function LofiMusic() {
             );
         }))}
       </div>
+
+      {/* Loading More Indicator */}
+      {fetchingMore && (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-black dark:border-white"></div>
+        </div>
+      )}
+
+      {/* End of results message */}
+      {!hasMore && songs.length > 0 && (
+        <p className="text-center text-gray-500 mt-8 mb-4 text-sm font-medium italic">
+          You've reached the end of the lofi library.
+        </p>
+      )}
+
 
       {/* Custom Delete Confirmation Modal */}
       {songToDelete && (

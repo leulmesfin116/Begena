@@ -36,6 +36,10 @@ export const uploadLofi = async (req, res) => {
 
 export const getLofiTracks = async (req, res) => {
   try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit) || 10);
+    const skip = (page - 1) * limit;
+
     const tracks = await prisma.song.findMany({
       where: {
         genres: {
@@ -43,6 +47,8 @@ export const getLofiTracks = async (req, res) => {
         },
       },
       orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
     });
     res.json(tracks);
   } catch (error) {
