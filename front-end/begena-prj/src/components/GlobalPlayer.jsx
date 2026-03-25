@@ -67,13 +67,13 @@ export function GlobalPlayer() {
 
       <div className="flex items-center justify-between p-3">
         {/* Current Song Info */}
-        <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
           <img
             src={currentSong.posterUrl || "/default-poster.jpg"}
             alt={currentSong.title}
-            className="w-12 h-12 object-cover rounded-md shadow-md flex-shrink-0"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-md shadow-md flex-shrink-0"
           />
-          <div className="min-w-0 flex items-center gap-3">
+          <div className="min-w-0 flex items-center gap-2 sm:gap-3">
             <div className="hidden sm:block min-w-0">
               <h4 className="font-bold text-sm text-gray-900 dark:text-white truncate max-w-[150px] md:max-w-[200px]">
                 {currentSong.title}
@@ -98,7 +98,7 @@ export function GlobalPlayer() {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-center gap-6 flex-1">
+        <div className="flex items-center justify-center gap-3 sm:gap-6 flex-[1.5] sm:flex-1">
           <button
             onClick={toggleShuffle}
             title="Shuffle"
@@ -108,7 +108,7 @@ export function GlobalPlayer() {
                 : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             }`}
           >
-            <FaRandom size={18} />
+            <FaRandom size={16} className="sm:w-[18px] sm:h-[18px]" />
           </button>
 
           <button
@@ -120,17 +120,17 @@ export function GlobalPlayer() {
                 : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
             }`}
           >
-            <FaStepBackward size={20} />
+            <FaStepBackward size={18} className="sm:w-[20px] sm:h-[20px]" />
           </button>
 
           <button
             onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-md"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-md flex-shrink-0"
           >
             {isPlaying ? (
-              <FaPause size={16} />
+              <FaPause size={14} className="sm:w-[16px] sm:h-[16px]" />
             ) : (
-              <FaPlay size={16} className="ml-1" />
+              <FaPlay size={14} className="sm:w-[16px] sm:h-[16px] ml-1" />
             )}
           </button>
 
@@ -143,7 +143,7 @@ export function GlobalPlayer() {
                 : "text-gray-300 dark:text-gray-600 cursor-not-allowed"
             }`}
           >
-            <FaStepForward size={20} />
+            <FaStepForward size={18} className="sm:w-[20px] sm:h-[20px]" />
           </button>
 
           <button
@@ -155,7 +155,7 @@ export function GlobalPlayer() {
                 : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
             }`}
           >
-            <FaRetweet size={18} />
+            <FaRetweet size={16} className="sm:w-[18px] sm:h-[18px]" />
             {repeatMode === "one" && (
               <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-black dark:bg-white text-white dark:text-black rounded-full w-3 h-3 flex items-center justify-center">
                 1
@@ -165,7 +165,7 @@ export function GlobalPlayer() {
         </div>
 
         {/* Time display */}
-        <div className="flex items-center justify-end flex-1 gap-4 pr-2">
+        <div className="flex items-center justify-end flex-1 gap-2 sm:gap-4 pr-2">
           <span className="hidden md:block text-xs text-black dark:text-white tabular-nums font-medium">
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
