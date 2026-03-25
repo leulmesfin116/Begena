@@ -64,7 +64,7 @@ export function Favourite() {
   }, [likedSongs]); // Re-fetch when likedSongs set changes in context
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 md:pb-32 pb-24">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6">
       <div className="m-4 sm:m-8 mb-8">
         <h1 className="text-black dark:text-white text-3xl font-bold text-center">
           Favourite Songs

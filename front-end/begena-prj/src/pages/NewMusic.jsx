@@ -201,7 +201,7 @@ export function NewMusic() {
     );
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 md:pb-32 pb-24 border-none">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 border-none">
       <h1 className="text-3xl font-bold mb-8 text-center text-black dark:text-white">
         New Releases
       </h1>

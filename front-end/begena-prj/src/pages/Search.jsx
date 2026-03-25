@@ -41,7 +41,7 @@ export function Search() {
   }, [query]);
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 md:pb-32 pb-24 border-none">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 border-none">
       <div className="flex flex-col items-center mb-8">
         <h1 className="text-3xl font-bold text-center text-black dark:text-white flex items-center gap-3">
           <FaSearch size={24} className="text-gray-400" />

@@ -31,11 +31,13 @@ import {
 import { useTheme } from "./ThemeContext.jsx";
 import { GlobalPlayer } from "./components/GlobalPlayer.jsx";
 import { useUser } from "./context/UserContext.jsx";
+import { useAudio } from "./context/AudioContext.jsx";
 
 function App() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLoggedIn, isAdmin, logout } = useUser();
+  const { currentSong } = useAudio();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -239,21 +241,23 @@ function App() {
           )}
         </div>
       </nav>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/newMusic" element={<NewMusic />} />
-        <Route path="/Podcast" element={<Podcast />} />
-        <Route path="/Playlist" element={<Playlist />} />
-        <Route path="/LofiMusic" element={<LofiMusic />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/admin/uploads" element={<AdminUploads />} />
+      <div className={currentSong ? "md:pb-32 pb-24" : ""}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/newMusic" element={<NewMusic />} />
+          <Route path="/Podcast" element={<Podcast />} />
+          <Route path="/Playlist" element={<Playlist />} />
+          <Route path="/LofiMusic" element={<LofiMusic />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/admin/uploads" element={<AdminUploads />} />
 
-        <Route path="/Favourite" element={<Favourite />} />
-        <Route path="/Search" element={<Search />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+          <Route path="/Favourite" element={<Favourite />} />
+          <Route path="/Search" element={<Search />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </div>
       <GlobalPlayer />
     </>
   );

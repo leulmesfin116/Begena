@@ -146,6 +146,15 @@ export function AudioProvider({ children }) {
     }
   };
 
+  const closePlayer = () => {
+    setCurrentSong(null);
+    setIsPlaying(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+  };
+
   const toggleShuffle = () => setIsShuffle((prev) => !prev);
   const toggleRepeatMode = () => {
     setRepeatMode((prev) => {
@@ -246,6 +255,7 @@ export function AudioProvider({ children }) {
         toggleShuffle,
         repeatMode,
         toggleRepeatMode,
+        closePlayer,
         refreshLikes: fetchLikes,
       }}
     >

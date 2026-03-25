@@ -8,6 +8,7 @@ import {
   FaHeart,
   FaRandom,
   FaRetweet,
+  FaTimes,
 } from "react-icons/fa";
 
 function formatTime(seconds) {
@@ -34,6 +35,7 @@ export function GlobalPlayer() {
     toggleShuffle,
     repeatMode,
     toggleRepeatMode,
+    closePlayer,
   } = useAudio();
 
   if (!currentSong) return null;
@@ -163,10 +165,17 @@ export function GlobalPlayer() {
         </div>
 
         {/* Time display */}
-        <div className="hidden md:flex items-center justify-end flex-1 pr-6">
-          <span className="text-xs text-black dark:text-white tabular-nums font-medium">
+        <div className="flex items-center justify-end flex-1 gap-4 pr-2">
+          <span className="hidden md:block text-xs text-black dark:text-white tabular-nums font-medium">
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
+          <button
+            onClick={closePlayer}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-accent rounded-full text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+            title="Close Player"
+          >
+            <FaTimes size={18} />
+          </button>
         </div>
       </div>
     </div>
